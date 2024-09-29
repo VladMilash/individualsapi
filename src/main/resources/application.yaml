@@ -1,2 +1,7 @@
 server:
   port: 8083
+security:
+  oauth2:
+    resourceserver:
+      jwt:
+        issuer-uri: http://localhost:8180/realms/individualsAPI
