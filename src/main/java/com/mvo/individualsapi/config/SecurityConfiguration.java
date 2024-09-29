@@ -16,25 +16,26 @@ import java.util.stream.Stream;
 public class SecurityConfiguration {
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        return  http
+        return http
                 .authorizeExchange(customizer -> customizer
                         .pathMatchers("/v1/registration").permitAll()
                         .anyExchange().authenticated())
-                .oauth2ResourceServer(customizer-> customizer.jwt(jwt-> {
-                    ReactiveJwtAuthenticationConverter customJwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();
-                    customJwtAuthenticationConverter.setPrincipalClaimName("preferred_username");
+                .oauth2ResourceServer(customizer -> customizer.jwt(jwt -> {
+                    ReactiveJwtAuthenticationConverter jwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();
+                    jwtAuthenticationConverter.setPrincipalClaimName("email");
+
                     JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
 
                     JwtGrantedAuthoritiesConverter customJwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
                     customJwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("groups");
                     customJwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
 
-                    customJwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(
+                    jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(
                             new ReactiveJwtGrantedAuthoritiesConverterAdapter(token ->
                                     Stream.concat(jwtGrantedAuthoritiesConverter.convert(token).stream(),
                                                     customJwtGrantedAuthoritiesConverter.convert(token).stream())
                                             .toList()));
-                    jwt.jwtAuthenticationConverter(customJwtAuthenticationConverter);
+                    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
                 }))
                 .build();
     }
