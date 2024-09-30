@@ -1,5 +1,6 @@
 package com.mvo.individualsapi.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -19,7 +20,9 @@ public class SecurityConfiguration {
 
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
-        return NimbusReactiveJwtDecoder.withJwkSetUri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/certs").build();
+        return NimbusReactiveJwtDecoder
+                .withJwkSetUri("${spring.security.oauth2.client.provider.keycloak.jwk-set-uri}")
+                .build();
     }
 
     @Bean

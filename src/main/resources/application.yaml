@@ -1,7 +1,17 @@
 server:
   port: 8083
-security:
-  oauth2:
-    resourceserver:
-      jwt:
-        issuer-uri: http://localhost:8180/realms/individualsAPI
+
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8180/realms/individualsAPI
+            user-name-attribute: preferred_username
+            jwk-set-uri: http://localhost:8180/realms/individualsAPI/protocol/openid-connect/certs # Внесли JWK Set URL сюда
+        registration:
+          keycloak:
+            client-id: individualsAPI
+            client-secret: 95MIc7ZPM334EtM3zJwf4MH1ncBGz8RA
+            authorization-grant-type: client_credentials
