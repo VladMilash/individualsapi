@@ -1,5 +1,6 @@
 package com.mvo.individualsapi.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,20 +17,22 @@ import java.util.stream.Stream;
 
 @Configuration
 @EnableWebFluxSecurity
+@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
         return NimbusReactiveJwtDecoder
-                .withJwkSetUri("${spring.security.oauth2.client.provider.keycloak.jwk-set-uri}")
+                .withJwkSetUri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/certs")
                 .build();
     }
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         return http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(customizer -> customizer
-                        .pathMatchers("/v1/registration").permitAll()
+                        .pathMatchers("api/v1/auth/registration").permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(customizer -> customizer.jwt(jwt -> {
                     ReactiveJwtAuthenticationConverter jwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();

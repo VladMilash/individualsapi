@@ -32,31 +32,58 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public Mono<RegistrationResponseDTO> registrationUser(RegistrationRequestDTO request) {
-        return createUser(request)
-                .then(getToken(request.getEmail(), request.getPassword()));
+        return getAdminToken()
+                .flatMap(adminToken -> createUser(request, adminToken))
+                .then(getToken(request.getEmail(), request.getPassword()))
+                .doOnError(e -> log.error("Error during user registration: ", e));
     }
 
-    private Mono<Void> createUser(RegistrationRequestDTO request) {
+    private Mono<String> getAdminToken() {
+        return webClient.post()
+                .uri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/token")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters
+                        .fromFormData("grant_type", "client_credentials")
+                        .with("client_id", clientId)
+                        .with("client_secret", clientSecret))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(response -> "Bearer " + response.get("access_token"))
+                .doOnSuccess(response -> log.info("Success get admin token for client_id {}", clientId))
+                .doOnError(e -> log.error("Error obtaining admin token: ", e));
+    }
+
+    private Mono<Void> createUser(RegistrationRequestDTO request, String adminToken) {
         Map<String, Object> userRepresentation = getRepresentation(request);
         return webClient.post()
-                .uri(keycloakIssuerUri + "/admin/realms/individualsAPI/users")
-                .contentType(MediaType.APPLICATION_JSON)
+                .uri("http://localhost:8180/auth/admin/realms/individualsAPI/users")
+                .headers(headers -> {
+                    headers.setBearerAuth(adminToken.substring(7));
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                })
                 .body(BodyInserters.fromValue(userRepresentation))
                 .exchangeToMono(response -> {
                     if (response.statusCode() == HttpStatus.CREATED) {
                         log.info("User created successfully");
                         return Mono.empty();
                     } else {
-                        return response.createException().flatMap(Mono::error);
+                        return response.bodyToMono(String.class)
+                                .flatMap(errorBody -> {
+                                    log.error("Failed to create user. Status: {}. Body: {}",
+                                            response.statusCode(), errorBody);
+                                    return Mono.error(new RuntimeException("Failed to create user: " + errorBody));
+                                });
                     }
-                })
-                .then();
+                });
     }
+
 
     private static Map<String, Object> getRepresentation(RegistrationRequestDTO request) {
         return Map.of(
+                "username", request.getEmail(),
                 "email", request.getEmail(),
                 "enabled", true,
+                "emailVerified", false,
                 "credentials", java.util.List.of(
                         Map.of(
                                 "type", "password",
@@ -69,7 +96,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private Mono<RegistrationResponseDTO> getToken(String email, String password) {
         return webClient.post()
-                .uri(keycloakIssuerUri + "/protocol/openid-connect/token")
+                .uri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("grant_type", "password")

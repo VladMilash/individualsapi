@@ -7,7 +7,7 @@ spring:
       client:
         provider:
           keycloak:
-            issuer-uri: http://localhost:8180/realms/individualsAPI
+            issuer-uri: http://localhost:8180/admin/realms/individualsAPI
             user-name-attribute: preferred_username
             jwk-set-uri: http://localhost:8180/realms/individualsAPI/protocol/openid-connect/certs # Внесли JWK Set URL сюда
         registration:
@@ -15,3 +15,6 @@ spring:
             client-id: individualsAPI
             client-secret: 95MIc7ZPM334EtM3zJwf4MH1ncBGz8RA
             authorization-grant-type: client_credentials
+logging:
+  level:
+    reactor.netty.http.client: DEBUG
