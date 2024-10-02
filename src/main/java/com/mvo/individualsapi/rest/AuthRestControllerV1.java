@@ -3,6 +3,7 @@ package com.mvo.individualsapi.rest;
 import com.mvo.individualsapi.dto.RegistrationRequestDTO;
 import com.mvo.individualsapi.dto.RegistrationResponseDTO;
 import com.mvo.individualsapi.service.RegistrationService;
+import com.mvo.individualsapi.service.impl.RegistrationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,5 +27,6 @@ public class AuthRestControllerV1 {
                         .body(registrationResponseDTO)
                 );
     }
+
 
 }

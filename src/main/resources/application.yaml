@@ -1,20 +1,27 @@
 server:
   port: 8083
 
+keycloak:
+  auth-server-url: http://localhost:8180
+  realm: individualsAPI
+  admin-username: admin
+  admin-password: admin
+
 spring:
   security:
     oauth2:
       client:
         provider:
           keycloak:
-            issuer-uri: http://localhost:8180/admin/realms/individualsAPI
+            issuer-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}
             user-name-attribute: preferred_username
-            jwk-set-uri: http://localhost:8180/realms/individualsAPI/protocol/openid-connect/certs # Внесли JWK Set URL сюда
+            jwk-set-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}/protocol/openid-connect/certs
         registration:
           keycloak:
             client-id: individualsAPI
-            client-secret: 95MIc7ZPM334EtM3zJwf4MH1ncBGz8RA
+            client-secret: YPuHtc3OCznfe2QcZ9hUMJybT7OsLddo
             authorization-grant-type: client_credentials
+
 logging:
   level:
     reactor.netty.http.client: DEBUG

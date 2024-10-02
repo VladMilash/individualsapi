@@ -1,18 +1,24 @@
 package com.mvo.individualsapi.service.impl;
 
+import com.mvo.individualsapi.config.ApplicationConfiguration;
 import com.mvo.individualsapi.dto.RegistrationResponseDTO;
 import com.mvo.individualsapi.dto.RegistrationRequestDTO;
 import com.mvo.individualsapi.service.RegistrationService;
+import jakarta.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -20,9 +26,13 @@ import java.util.Map;
 @Slf4j
 public class RegistrationServiceImpl implements RegistrationService {
     private final WebClient webClient;
+    private final Keycloak keycloakAdminClient;
 
-    @Value("${spring.security.oauth2.client.provider.keycloak.issuer-uri}")
-    private String keycloakIssuerUri;
+    @Value("${keycloak.auth-server-url}")
+    private String keycloakAuthServerUrl;
+
+    @Value("${keycloak.realm}")
+    private String realm;
 
     @Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
     private String clientId;
@@ -30,83 +40,65 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Value("${spring.security.oauth2.client.registration.keycloak.client-secret}")
     private String clientSecret;
 
+    @Value("${keycloak.admin-username}")
+    private String adminUsername;
+
+    @Value("${keycloak.admin-password}")
+    private String adminPassword;
+
     @Override
     public Mono<RegistrationResponseDTO> registrationUser(RegistrationRequestDTO request) {
-        return getAdminToken()
-                .flatMap(adminToken -> createUser(request, adminToken))
+        return createUserInKeycloak(request)
                 .then(getToken(request.getEmail(), request.getPassword()))
                 .doOnError(e -> log.error("Error during user registration: ", e));
     }
 
-    private Mono<String> getAdminToken() {
-        return webClient.post()
-                .uri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/token")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("grant_type", "client_credentials")
-                        .with("client_id", clientId)
-                        .with("client_secret", clientSecret))
-                .retrieve()
-                .bodyToMono(Map.class)
-                .map(response -> "Bearer " + response.get("access_token"))
-                .doOnSuccess(response -> log.info("Success get admin token for client_id {}", clientId))
-                .doOnError(e -> log.error("Error obtaining admin token: ", e));
-    }
+    private Mono<Void> createUserInKeycloak(RegistrationRequestDTO request) {
+        return Mono.fromCallable(() -> {
+                    UserRepresentation user = new UserRepresentation();
+                    user.setEnabled(true);
+                    user.setUsername("test");
+                    user.setFirstName("test");
+                    user.setLastName("test");
+                    user.setEmail(request.getEmail());
+                    user.setEmailVerified(false);
 
-    private Mono<Void> createUser(RegistrationRequestDTO request, String adminToken) {
-        Map<String, Object> userRepresentation = getRepresentation(request);
-        return webClient.post()
-                .uri("http://localhost:8180/auth/admin/realms/individualsAPI/users")
-                .headers(headers -> {
-                    headers.setBearerAuth(adminToken.substring(7));
-                    headers.setContentType(MediaType.APPLICATION_JSON);
-                })
-                .body(BodyInserters.fromValue(userRepresentation))
-                .exchangeToMono(response -> {
-                    if (response.statusCode() == HttpStatus.CREATED) {
-                        log.info("User created successfully");
-                        return Mono.empty();
+                    CredentialRepresentation credential = new CredentialRepresentation();
+                    credential.setType(CredentialRepresentation.PASSWORD);
+                    credential.setValue(request.getPassword());
+                    credential.setTemporary(false);
+
+                    user.setCredentials(Collections.singletonList(credential));
+
+                    Response response = keycloakAdminClient.realm(realm).users().create(user);
+
+                    if (response.getStatus() < 300) {
+                        log.info("User created successfully in Keycloak");
+                        return true;
                     } else {
-                        return response.bodyToMono(String.class)
-                                .flatMap(errorBody -> {
-                                    log.error("Failed to create user. Status: {}. Body: {}",
-                                            response.statusCode(), errorBody);
-                                    return Mono.error(new RuntimeException("Failed to create user: " + errorBody));
-                                });
+                        String errorMessage = response.readEntity(String.class);
+                        log.error("Failed to create user in Keycloak. Status: {}. Message: {}",
+                                response.getStatus(), errorMessage);
+                        throw new RuntimeException("Failed to create user: " + errorMessage);
                     }
-                });
+                })
+                .then();
     }
 
-
-    private static Map<String, Object> getRepresentation(RegistrationRequestDTO request) {
-        return Map.of(
-                "username", request.getEmail(),
-                "email", request.getEmail(),
-                "enabled", true,
-                "emailVerified", false,
-                "credentials", java.util.List.of(
-                        Map.of(
-                                "type", "password",
-                                "value", request.getPassword(),
-                                "temporary", false
-                        )
-                )
-        );
-    }
-
-    private Mono<RegistrationResponseDTO> getToken(String email, String password) {
+    private Mono<RegistrationResponseDTO> getToken(String username, String password) {
         return webClient.post()
-                .uri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/token")
+                .uri(String.format("%s/realms/%s/protocol/openid-connect/token",
+                        keycloakAuthServerUrl, realm))
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("grant_type", "password")
                         .with("client_id", clientId)
                         .with("client_secret", clientSecret)
-                        .with("username", email)
+                        .with("username", username)
                         .with("password", password))
                 .retrieve()
                 .bodyToMono(RegistrationResponseDTO.class)
-                .doOnSuccess(s -> log.info("Token obtained successfully"))
-                .doOnError(e -> log.error("Error obtaining token", e));
+                .doOnSuccess(s -> log.info("Token obtained successfully for user: {}", username))
+                .doOnError(e -> log.error("Error obtaining token for user: {}", username, e));
     }
 }
