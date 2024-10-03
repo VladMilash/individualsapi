@@ -28,19 +28,4 @@ public class ApplicationConfiguration {
         return WebClient.create();
     }
 
-    @Bean
-    public Keycloak keycloakAdminClient() {
-        return KeycloakBuilder.builder()
-                .serverUrl(keycloakAuthServerUrl)
-                .realm(realm)
-                .clientId(realm)
-                .clientSecret("YPuHtc3OCznfe2QcZ9hUMJybT7OsLddo")
-                .username(adminUsername)
-                .password(adminPassword)
-                .resteasyClient(new ResteasyClientBuilderImpl()
-                        .connectionPoolSize(10)
-                        .build())
-                .build();
-    }
-
 }
