@@ -99,7 +99,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .uri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
-                        .fromFormData("grant_type", "client_credentials")
+                        .fromFormData("grant_type", "password")
                         .with("client_id", clientId)
                         .with("client_secret", clientSecret)
                         .with("username", email)
