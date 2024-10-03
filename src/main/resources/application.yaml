@@ -16,6 +16,7 @@ spring:
             issuer-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}
             user-name-attribute: preferred_username
             jwk-set-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}/protocol/openid-connect/certs
+            authorization-uri: ${keycloak.auth-server-url}/realms/individualsAPI/protocol/openid-connect/token
         registration:
           keycloak:
             client-id: individualsAPI

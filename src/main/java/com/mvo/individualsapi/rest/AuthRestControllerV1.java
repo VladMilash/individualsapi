@@ -1,9 +1,7 @@
 package com.mvo.individualsapi.rest;
 
 import com.mvo.individualsapi.dto.RegistrationRequestDTO;
-import com.mvo.individualsapi.dto.RegistrationResponseDTO;
 import com.mvo.individualsapi.service.RegistrationService;
-import com.mvo.individualsapi.service.impl.RegistrationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +18,13 @@ public class AuthRestControllerV1 {
     private final RegistrationService registrationService;
 
     @PostMapping("/registration")
-    public Mono<ResponseEntity<RegistrationResponseDTO>> userRegistration(@RequestBody RegistrationRequestDTO registrationRequestDTO) {
+    public Mono<ResponseEntity<String>> userRegistration(@RequestBody RegistrationRequestDTO registrationRequestDTO) {
         return registrationService.registrationUser(registrationRequestDTO)
-                .map(registrationResponseDTO -> ResponseEntity
+                .map(responseDTO -> ResponseEntity
                         .status(HttpStatus.OK)
-                        .body(registrationResponseDTO)
-                );
+                        .body("Registration successful"));
     }
-
-
 }
+
+
+

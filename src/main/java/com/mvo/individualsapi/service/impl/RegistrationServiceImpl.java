@@ -30,8 +30,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Value("${spring.security.oauth2.client.registration.keycloak.client-secret}")
     private String clientSecret;
 
+    @Value("${spring.security.oauth2.client.provider.keycloak.authorization-uri}")
+    private String authorizationUri;
+
     @Override
     public Mono<RegistrationResponseDTO> registrationUser(RegistrationRequestDTO request) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            return Mono.error(new IllegalArgumentException("Passwords do not match"));
+        }
+
         return getAdminToken()
                 .flatMap(adminToken -> createUser(request, adminToken))
                 .then(getToken(request.getEmail(), request.getPassword()))
@@ -40,7 +47,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private Mono<String> getAdminToken() {
         return webClient.post()
-                .uri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/token")
+                .uri(keycloakIssuerUri + "/protocol/openid-connect/token")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("grant_type", "client_credentials")
@@ -49,7 +56,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .retrieve()
                 .bodyToMono(Map.class)
                 .map(response -> "Bearer " + response.get("access_token"))
-                .doOnSuccess(response -> log.info("Success get admin token for client_id {},", clientId ))
+                .doOnSuccess(response -> log.info("Success get admin token for client_id {},", clientId))
                 .doOnError(e -> log.error("Error obtaining admin token: ", e));
     }
 
@@ -96,7 +103,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private Mono<RegistrationResponseDTO> getToken(String email, String password) {
         return webClient.post()
-                .uri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/token")
+                .uri(authorizationUri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .body(BodyInserters
                         .fromFormData("grant_type", "password")
