@@ -35,11 +35,8 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
 
     @Override
     public Mono<RegistrationOrLoginResponseDTO> registrationUser(RegistrationOrLoginRequestDTO request) {
-        if (!request.getPassword().equals(request.getConfirmPassword())) {
-            return Mono.error(new IllegalArgumentException("Passwords do not match"));
-        }
-
-        return getAdminToken()
+        return validatePasswords(request)
+                .then(getAdminToken())
                 .flatMap(adminToken -> createUser(request, adminToken))
                 .then(getToken(request.getEmail(), request.getPassword()))
                 .doOnError(e -> log.error("Error during user registration: ", e));
@@ -47,13 +44,17 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
 
     @Override
     public Mono<RegistrationOrLoginResponseDTO> loginUser(RegistrationOrLoginRequestDTO request) {
+        return validatePasswords(request)
+                .then(getToken(request.getEmail(), request.getPassword()))
+                .doOnSuccess(response -> log.info("Success login user with email {} ", request.getEmail()))
+                .doOnError(e -> log.error("Error during user login: ", e));
+    }
+
+    private Mono<Void> validatePasswords(RegistrationOrLoginRequestDTO request) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             return Mono.error(new IllegalArgumentException("Passwords do not match"));
         }
-
-        return getToken(request.getEmail(),request.getPassword())
-                .doOnSuccess(response -> log.info("Success login user with email {} ", request.getEmail()))
-                .doOnError(e -> log.error("Error during user login: ", e));
+        return Mono.empty();
     }
 
     private Mono<String> getAdminToken() {
