@@ -2,7 +2,7 @@ package com.mvo.individualsapi.service.impl;
 
 import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
-import com.mvo.individualsapi.service.RegistrationService;
+import com.mvo.individualsapi.service.RegistrationAndLoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +18,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 @Slf4j
-public class RegistrationServiceImpl implements RegistrationService {
+public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginService {
     private final WebClient webClient;
 
     @Value("${spring.security.oauth2.client.provider.keycloak.issuer-uri}")
@@ -43,6 +43,17 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .flatMap(adminToken -> createUser(request, adminToken))
                 .then(getToken(request.getEmail(), request.getPassword()))
                 .doOnError(e -> log.error("Error during user registration: ", e));
+    }
+
+    @Override
+    public Mono<RegistrationOrLoginResponseDTO> loginUser(RegistrationOrLoginRequestDTO request) {
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            return Mono.error(new IllegalArgumentException("Passwords do not match"));
+        }
+
+        return getToken(request.getEmail(),request.getPassword())
+                .doOnSuccess(response -> log.info("Success login user with email {} ", request.getEmail()))
+                .doOnError(e -> log.error("Error during user login: ", e));
     }
 
     private Mono<String> getAdminToken() {

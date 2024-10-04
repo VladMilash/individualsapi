@@ -3,8 +3,7 @@ package com.mvo.individualsapi.rest;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
-import com.mvo.individualsapi.service.LoginService;
-import com.mvo.individualsapi.service.RegistrationService;
+import com.mvo.individualsapi.service.RegistrationAndLoginService;
 import com.mvo.individualsapi.service.UserinfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,13 +17,12 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("api/v1/auth/")
 public class AuthRestControllerV1 {
-    private final RegistrationService registrationService;
+    private final RegistrationAndLoginService registrationAndLoginService;
     private final UserinfoService userinfoService;
-    private final LoginService loginService;
 
     @PostMapping("/registration")
     public Mono<ResponseEntity<RegistrationOrLoginResponseDTO>> userRegistration(@RequestBody RegistrationOrLoginRequestDTO registrationOrLoginRequestDTO) {
-        return registrationService.registrationUser(registrationOrLoginRequestDTO)
+        return registrationAndLoginService.registrationUser(registrationOrLoginRequestDTO)
                 .map(responseDTO -> ResponseEntity
                         .status(HttpStatus.OK)
                         .body(responseDTO));
@@ -43,7 +41,7 @@ public class AuthRestControllerV1 {
 
     @PostMapping("/login")
     public Mono<ResponseEntity<RegistrationOrLoginResponseDTO>> login(@RequestBody RegistrationOrLoginRequestDTO registrationOrLoginRequestDTO) {
-        return loginService.login(registrationOrLoginRequestDTO)
+        return registrationAndLoginService.loginUser(registrationOrLoginRequestDTO)
                 .map(responseDTO -> ResponseEntity
                         .status(HttpStatus.OK)
                         .body(responseDTO));
