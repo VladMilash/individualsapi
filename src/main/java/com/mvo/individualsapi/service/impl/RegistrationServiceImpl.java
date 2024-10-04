@@ -1,7 +1,7 @@
 package com.mvo.individualsapi.service.impl;
 
-import com.mvo.individualsapi.dto.RegistrationResponseDTO;
-import com.mvo.individualsapi.dto.RegistrationRequestDTO;
+import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
+import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private String authorizationUri;
 
     @Override
-    public Mono<RegistrationResponseDTO> registrationUser(RegistrationRequestDTO request) {
+    public Mono<RegistrationOrLoginResponseDTO> registrationUser(RegistrationOrLoginRequestDTO request) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
             return Mono.error(new IllegalArgumentException("Passwords do not match"));
         }
@@ -60,7 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .doOnError(e -> log.error("Error obtaining admin token: ", e));
     }
 
-    private Mono<Void> createUser(RegistrationRequestDTO request, String adminToken) {
+    private Mono<Void> createUser(RegistrationOrLoginRequestDTO request, String adminToken) {
         Map<String, Object> userRepresentation = getRepresentation(request);
         return webClient.post()
                 .uri("http://localhost:8180/admin/realms/individualsAPI/users")
@@ -85,7 +85,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
 
-    private static Map<String, Object> getRepresentation(RegistrationRequestDTO request) {
+    private static Map<String, Object> getRepresentation(RegistrationOrLoginRequestDTO request) {
         return Map.of(
                 "username", request.getEmail(),
                 "email", request.getEmail(),
@@ -101,7 +101,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         );
     }
 
-    private Mono<RegistrationResponseDTO> getToken(String email, String password) {
+    private Mono<RegistrationOrLoginResponseDTO> getToken(String email, String password) {
         return webClient.post()
                 .uri(authorizationUri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -113,7 +113,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .with("password", password)
                         .with("scope", "openid"))
                 .retrieve()
-                .bodyToMono(RegistrationResponseDTO.class)
+                .bodyToMono(RegistrationOrLoginResponseDTO.class)
                 .doOnSuccess(s -> log.info("Token obtained successfully"))
                 .doOnError(e -> log.error("Error obtaining token", e));
     }

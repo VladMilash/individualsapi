@@ -1,8 +1,9 @@
 package com.mvo.individualsapi.rest;
 
-import com.mvo.individualsapi.dto.RegistrationRequestDTO;
-import com.mvo.individualsapi.dto.RegistrationResponseDTO;
+import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
+import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
+import com.mvo.individualsapi.service.LoginService;
 import com.mvo.individualsapi.service.RegistrationService;
 import com.mvo.individualsapi.service.UserinfoService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,11 @@ import reactor.core.publisher.Mono;
 public class AuthRestControllerV1 {
     private final RegistrationService registrationService;
     private final UserinfoService userinfoService;
+    private final LoginService loginService;
 
     @PostMapping("/registration")
-    public Mono<ResponseEntity<RegistrationResponseDTO>> userRegistration(@RequestBody RegistrationRequestDTO registrationRequestDTO) {
-        return registrationService.registrationUser(registrationRequestDTO)
+    public Mono<ResponseEntity<RegistrationOrLoginResponseDTO>> userRegistration(@RequestBody RegistrationOrLoginRequestDTO registrationOrLoginRequestDTO) {
+        return registrationService.registrationUser(registrationOrLoginRequestDTO)
                 .map(responseDTO -> ResponseEntity
                         .status(HttpStatus.OK)
                         .body(responseDTO));
@@ -37,6 +39,15 @@ public class AuthRestControllerV1 {
                         .map(userinfoResponseDTO -> ResponseEntity
                                 .status(HttpStatus.OK)
                                 .body(userinfoResponseDTO)));
+    }
+
+    @PostMapping("/login")
+    public Mono<ResponseEntity<RegistrationOrLoginResponseDTO>> login(@RequestBody RegistrationOrLoginRequestDTO registrationOrLoginRequestDTO) {
+        return loginService.login(registrationOrLoginRequestDTO)
+                .map(responseDTO -> ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(responseDTO));
+
     }
 }
 

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder(toBuilder = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class RegistrationRequestDTO {
+public class RegistrationOrLoginRequestDTO {
     private String email;
     private String password;
     private String confirmPassword;

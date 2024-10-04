@@ -1,9 +1,9 @@
 package com.mvo.individualsapi.service;
 
-import com.mvo.individualsapi.dto.RegistrationResponseDTO;
-import com.mvo.individualsapi.dto.RegistrationRequestDTO;
+import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
+import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import reactor.core.publisher.Mono;
 
 public interface RegistrationService {
-    Mono<RegistrationResponseDTO> registrationUser(RegistrationRequestDTO response);
+    Mono<RegistrationOrLoginResponseDTO> registrationUser(RegistrationOrLoginRequestDTO response);
 }
