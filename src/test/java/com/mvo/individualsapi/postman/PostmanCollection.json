@@ -1,0 +1,216 @@
+{
+  "info": {
+    "_postman_id": "dd7499a9-a1be-4067-b425-0d7c76397bf9",
+    "name": "individualsapi",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "37537713"
+  },
+  "item": [
+    {
+      "name": "userinfo",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI1YlRRQTcta0xIU3R0aGU5dldNdGUtZlhnbWdBY3kzNzZUbVF4dEFiRDEwIn0.eyJleHAiOjE3Mjc5NzI4MzksImlhdCI6MTcyNzk3MTYzOSwianRpIjoiYTlkNzg4YmQtNjFhOC00OGFmLThlZTUtZjM3ZDhhNzNhMzAyIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL3JlYWxtcy9pbmRpdmlkdWFsc0FQSSIsImF1ZCI6WyJyZWFsbS1tYW5hZ2VtZW50IiwiYWNjb3VudCJdLCJzdWIiOiJmOTVmNjViZS1mMzVhLTQ4NzUtYjQ4Mi1mMTljYmUwNDVmOWMiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJpbmRpdmlkdWFsc0FQSSIsInNpZCI6IjVmMjg4NDU5LTlmZWMtNDk1ZS04OWRkLWFiMjY2MTJmYjBkOSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1pbmRpdmlkdWFsc2FwaSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbInZpZXctcmVhbG0iLCJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwicmVhbG0tYWRtaW4iLCJjcmVhdGUtY2xpZW50IiwibWFuYWdlLXVzZXJzIiwicXVlcnktcmVhbG1zIiwidmlldy1hdXRob3JpemF0aW9uIiwicXVlcnktY2xpZW50cyIsInF1ZXJ5LXVzZXJzIiwibWFuYWdlLWV2ZW50cyIsIm1hbmFnZS1yZWFsbSIsInZpZXctZXZlbnRzIiwidmlldy11c2VycyIsInZpZXctY2xpZW50cyIsIm1hbmFnZS1hdXRob3JpemF0aW9uIiwibWFuYWdlLWNsaWVudHMiLCJxdWVyeS1ncm91cHMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicHJlZmVycmVkX3VzZXJuYW1lIjoiMTIzNUAxMjMuY29tIiwiZW1haWwiOiIxMjM1QDEyMy5jb20ifQ.cMnrOmfQSZ_X9YlqsemgLdqTLkURLXsmOhV_Jy_B2cSqG_cve7O0QEiVJnkKRDwxb25RDRdba73-sayO8TsnHeMfhsHRZvrUgFv1XkH8DGQoNo7-9aqMaJzgyRx4omkAm0h8TxT-HLGyajgUYs9QzF0yv5AzDsjF4dNblQSmSRpVxe8BtJm-gRyGFNnAI5jsDBJi46rG0xp0sJ0iKHIAs2Kb0V69K4VRVXcnbbEZ3l149pYG80QVxihGS_Z8UqtGgI9DGh4ZlzkTMY8Iei6Zbf0Abc1OVjyghF2sS2SVQACg18cji3NgYwXIX0oAV7heRTHSL2hBbAYSOj0_VGRTGA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8083/api/v1/auth/info",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "info"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "registration",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"1235@123.com\",\r\n  \"password\": \"password\",\r\n  \"confirm_password\": \"password\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8083/api/v1/auth/registration",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "registration"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login kc",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "scope",
+            "value": "openiD",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "client_id",
+              "value": "individualsAPI",
+              "type": "text"
+            },
+            {
+              "key": "client_secret",
+              "value": "YPuHtc3OCznfe2QcZ9hUMJybT7OsLddo",
+              "type": "text"
+            },
+            {
+              "key": "username",
+              "value": "er555@ex.com",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "password",
+              "type": "text"
+            },
+            {
+              "key": "grant_type",
+              "value": "password",
+              "type": "text"
+            },
+            {
+              "key": "scope",
+              "value": "openid",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8180/realms/individualsAPI/protocol/openid-connect/token",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8180",
+          "path": [
+            "realms",
+            "individualsAPI",
+            "protocol",
+            "openid-connect",
+            "token"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "userinfi kc",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI1YlRRQTcta0xIU3R0aGU5dldNdGUtZlhnbWdBY3kzNzZUbVF4dEFiRDEwIn0.eyJleHAiOjE3Mjc5NzAzNDMsImlhdCI6MTcyNzk3MDA0MywianRpIjoiMjRjNjRhNGQtYzA5Yi00NDQ3LThjYWUtOTlmOGQwMDQzY2YxIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MTgwL3JlYWxtcy9pbmRpdmlkdWFsc0FQSSIsImF1ZCI6WyJyZWFsbS1tYW5hZ2VtZW50IiwiYWNjb3VudCJdLCJzdWIiOiJmZDVkNDQzMC1hNGNhLTQyNDQtODQ5Yi0yZmY3ZWIxNjE4M2MiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJpbmRpdmlkdWFsc0FQSSIsInNpZCI6ImQzNTgxYjUwLTdlY2UtNDIxNy1iZjU1LTljNjE2MGRhODU0YiIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiZGVmYXVsdC1yb2xlcy1pbmRpdmlkdWFsc2FwaSIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInJlc291cmNlX2FjY2VzcyI6eyJyZWFsbS1tYW5hZ2VtZW50Ijp7InJvbGVzIjpbInZpZXctcmVhbG0iLCJ2aWV3LWlkZW50aXR5LXByb3ZpZGVycyIsIm1hbmFnZS1pZGVudGl0eS1wcm92aWRlcnMiLCJpbXBlcnNvbmF0aW9uIiwicmVhbG0tYWRtaW4iLCJjcmVhdGUtY2xpZW50IiwibWFuYWdlLXVzZXJzIiwicXVlcnktcmVhbG1zIiwidmlldy1hdXRob3JpemF0aW9uIiwicXVlcnktY2xpZW50cyIsInF1ZXJ5LXVzZXJzIiwibWFuYWdlLWV2ZW50cyIsIm1hbmFnZS1yZWFsbSIsInZpZXctZXZlbnRzIiwidmlldy11c2VycyIsInZpZXctY2xpZW50cyIsIm1hbmFnZS1hdXRob3JpemF0aW9uIiwibWFuYWdlLWNsaWVudHMiLCJxdWVyeS1ncm91cHMiXX0sImFjY291bnQiOnsicm9sZXMiOlsibWFuYWdlLWFjY291bnQiLCJtYW5hZ2UtYWNjb3VudC1saW5rcyIsInZpZXctcHJvZmlsZSJdfX0sInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwicHJlZmVycmVkX3VzZXJuYW1lIjoiZXI1NTVAZXguY29tIiwiZW1haWwiOiJlcjU1NUBleC5jb20ifQ.up5gNxSc5IhCXvjDPSeWHB2GfE1X1sYOgtQ13Us5XJ_GABrYofh_EW7Xwt9o4ppvY3FpJAwhTp5CohhlrYDBjpHenANSvfhBztrbXYJYa5kMBue78R51iAcKmaG0t3-o9npiZJ-Zs98THEnzNUZTbPqxni3mmWnj9tpMB959U4TyYe4d8WUYfAOh8i8Mz9GaaiVj1EZ8i_YyYXm056n97abCWPQa7U0o2JINwOznnkSiwtH5d4LrR7FUBrl3eMp2iYohbCh-JDp5ZgrfP9UtH9WptC9K0OnQ-T1dhNAoaMDvCfSSuXAqlpclm-oV6jjqw5xwLqBuZJaSCIYOT0XdUA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "X-Client-IP",
+            "value": "127.0.0.1",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8180/realms/individualsAPI/protocol/openid-connect/userinfo",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8180",
+          "path": [
+            "realms",
+            "individualsAPI",
+            "protocol",
+            "openid-connect",
+            "userinfo"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"1@123.com\",\r\n  \"password\": \"password\",\r\n  \"confirm_password\": \"password\"\r\n\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8083/api/v1/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8083",
+          "path": [
+            "api",
+            "v1",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "refresh token",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}
