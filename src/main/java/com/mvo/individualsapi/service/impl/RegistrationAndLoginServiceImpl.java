@@ -2,6 +2,7 @@ package com.mvo.individualsapi.service.impl;
 
 import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
+import com.mvo.individualsapi.exception.PasswordsMatchException;
 import com.mvo.individualsapi.service.RegistrationAndLoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +53,7 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
 
     private Mono<Void> validatePasswords(RegistrationOrLoginRequestDTO request) {
         if (!request.getPassword().equals(request.getConfirmPassword())) {
-            return Mono.error(new IllegalArgumentException("Passwords do not match"));
+            return Mono.error(new PasswordsMatchException("Passwords do not match", "PASSWORDS_DO_NOT_MATCH"));
         }
         return Mono.empty();
     }
