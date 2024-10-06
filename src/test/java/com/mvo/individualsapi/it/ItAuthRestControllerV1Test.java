@@ -113,4 +113,6 @@ public class ItAuthRestControllerV1Test {
         assertNotNull(responseDTO.getAccessToken());
         assertNotNull(responseDTO.getRefreshToken());
     }
+
+
 }
