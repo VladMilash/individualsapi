@@ -1,7 +1,7 @@
 package com.mvo.individualsapi.service;
 
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
-import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
+import com.mvo.individualsapi.dto.AccessTokenDto;
 import com.mvo.individualsapi.service.impl.RegistrationAndLoginServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ class RegistrationAndLoginServiceTest {
     private WebClient.RequestBodySpec requestBodySpec;
     private WebClient.ResponseSpec responseSpec;
     private RegistrationOrLoginRequestDTO testRequestDTO;
-    private RegistrationOrLoginResponseDTO expectedResponse;
+    private AccessTokenDto expectedResponse;
 
     @BeforeEach
     void setUp() {
@@ -53,7 +53,7 @@ class RegistrationAndLoginServiceTest {
                 .confirmPassword("password")
                 .build();
 
-        expectedResponse = new RegistrationOrLoginResponseDTO().toBuilder()
+        expectedResponse = new AccessTokenDto().toBuilder()
                 .accessToken("new-access-token")
                 .refreshToken("new-refresh-token")
                 .build();
@@ -76,6 +76,7 @@ class RegistrationAndLoginServiceTest {
         ReflectionTestUtils.setField(service, "clientId", "test-client");
         ReflectionTestUtils.setField(service, "clientSecret", "test-secret");
         ReflectionTestUtils.setField(service, "authorizationUri", "http://auth");
+        ReflectionTestUtils.setField(service, "registrationUri", "http://registr");
     }
 
     @Test
@@ -84,7 +85,7 @@ class RegistrationAndLoginServiceTest {
         when(requestBodySpec.exchangeToMono(any())).thenReturn(Mono.empty());
         when(responseSpec.bodyToMono(Map.class))
                 .thenReturn(Mono.just(Map.of("access_token", "admin-token")));
-        when(responseSpec.bodyToMono(RegistrationOrLoginResponseDTO.class))
+        when(responseSpec.bodyToMono(AccessTokenDto.class))
                 .thenReturn(Mono.just(expectedResponse));
 
         StepVerifier.create(service.registrationUser(testRequestDTO))
@@ -94,7 +95,7 @@ class RegistrationAndLoginServiceTest {
 
     @Test
     void testLoginUser_Success() {
-        when(responseSpec.bodyToMono(RegistrationOrLoginResponseDTO.class))
+        when(responseSpec.bodyToMono(AccessTokenDto.class))
                 .thenReturn(Mono.just(expectedResponse));
 
         StepVerifier.create(service.loginUser(testRequestDTO))

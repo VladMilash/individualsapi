@@ -1,7 +1,7 @@
 package com.mvo.individualsapi.service;
 
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
-import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
+import com.mvo.individualsapi.dto.AccessTokenDto;
 import com.mvo.individualsapi.service.impl.RefreshTokenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,7 @@ class RefreshTokenServiceTest {
     private WebClient.RequestBodySpec requestBodySpec;
     private WebClient.ResponseSpec responseSpec;
     private RefreshTokenRequestDTO testRequestDTO;
-    private RegistrationOrLoginResponseDTO expectedResponse;
+    private AccessTokenDto expectedResponse;
 
     @BeforeEach
     void setUp() {
@@ -48,7 +48,7 @@ class RefreshTokenServiceTest {
                 .refreshToken("test-refresh-token")
                 .build();
 
-        expectedResponse = new RegistrationOrLoginResponseDTO().toBuilder()
+        expectedResponse = new AccessTokenDto().toBuilder()
                 .accessToken("new-access-token")
                 .refreshToken("new-refresh-token")
                 .build();
@@ -74,7 +74,7 @@ class RefreshTokenServiceTest {
 
     @Test
     void testRefreshToken_Success() {
-        when(responseSpec.bodyToMono(RegistrationOrLoginResponseDTO.class))
+        when(responseSpec.bodyToMono(AccessTokenDto.class))
                 .thenReturn(Mono.just(expectedResponse));
 
         StepVerifier.create(service.refreshToken(testRequestDTO))

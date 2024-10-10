@@ -1,7 +1,7 @@
 package com.mvo.individualsapi.service.impl;
 
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
-import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
+import com.mvo.individualsapi.dto.AccessTokenDto;
 import com.mvo.individualsapi.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private String authorizationUri;
 
     @Override
-    public Mono<RegistrationOrLoginResponseDTO> refreshToken(RefreshTokenRequestDTO request) {
+    public Mono<AccessTokenDto> refreshToken(RefreshTokenRequestDTO request) {
         return webClient.post()
                 .uri(authorizationUri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -39,7 +39,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
                         .with("refresh_token", request.getRefreshToken())
                         .with("scope", "openid"))
                 .retrieve()
-                .bodyToMono(RegistrationOrLoginResponseDTO.class)
+                .bodyToMono(AccessTokenDto.class)
                 .doOnSuccess(s -> log.info("Token refreshed successfully"))
                 .doOnError(e -> log.error("Error refresh token", e));
     }

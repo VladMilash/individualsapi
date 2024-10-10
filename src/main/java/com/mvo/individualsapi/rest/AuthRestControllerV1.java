@@ -2,7 +2,7 @@ package com.mvo.individualsapi.rest;
 
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
-import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
+import com.mvo.individualsapi.dto.AccessTokenDto;
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
 import com.mvo.individualsapi.service.RefreshTokenService;
 import com.mvo.individualsapi.service.RegistrationAndLoginService;
@@ -24,7 +24,7 @@ public class AuthRestControllerV1 {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/registration")
-    public Mono<ResponseEntity<RegistrationOrLoginResponseDTO>> userRegistration
+    public Mono<ResponseEntity<AccessTokenDto>> userRegistration
             (@RequestBody RegistrationOrLoginRequestDTO registrationOrLoginRequestDTO) {
 
         return registrationAndLoginService.registrationUser(registrationOrLoginRequestDTO)
@@ -45,7 +45,7 @@ public class AuthRestControllerV1 {
     }
 
     @PostMapping("/login")
-    public Mono<ResponseEntity<RegistrationOrLoginResponseDTO>> login
+    public Mono<ResponseEntity<AccessTokenDto>> login
             (@RequestBody RegistrationOrLoginRequestDTO registrationOrLoginRequestDTO) {
 
         return registrationAndLoginService.loginUser(registrationOrLoginRequestDTO)
@@ -56,7 +56,7 @@ public class AuthRestControllerV1 {
     }
 
     @PostMapping("/refresh")
-    public Mono<ResponseEntity<RegistrationOrLoginResponseDTO>> refresh
+    public Mono<ResponseEntity<AccessTokenDto>> refresh
             (@RequestBody RefreshTokenRequestDTO refreshTokenRequestDTO) {
 
         return refreshTokenService.refreshToken(refreshTokenRequestDTO)

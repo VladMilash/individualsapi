@@ -1,6 +1,6 @@
 package com.mvo.individualsapi.service.impl;
 
-import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
+import com.mvo.individualsapi.dto.AccessTokenDto;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.exception.PasswordsMatchException;
 import com.mvo.individualsapi.service.RegistrationAndLoginService;
@@ -34,8 +34,11 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
     @Value("${spring.security.oauth2.client.provider.keycloak.authorization-uri}")
     private String authorizationUri;
 
+    @Value("${spring.security.oauth2.client.provider.keycloak.registration-uri}")
+    private String registrationUri;
+
     @Override
-    public Mono<RegistrationOrLoginResponseDTO> registrationUser(RegistrationOrLoginRequestDTO request) {
+    public Mono<AccessTokenDto> registrationUser(RegistrationOrLoginRequestDTO request) {
         return validatePasswords(request)
                 .then(getAdminToken())
                 .flatMap(adminToken -> createUser(request, adminToken))
@@ -44,7 +47,7 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
     }
 
     @Override
-    public Mono<RegistrationOrLoginResponseDTO> loginUser(RegistrationOrLoginRequestDTO request) {
+    public Mono<AccessTokenDto> loginUser(RegistrationOrLoginRequestDTO request) {
         return validatePasswords(request)
                 .then(getToken(request.getEmail(), request.getPassword()))
                 .doOnSuccess(response -> log.info("Success login user with email {} ", request.getEmail()))
@@ -76,7 +79,7 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
     private Mono<Void> createUser(RegistrationOrLoginRequestDTO request, String adminToken) {
         Map<String, Object> userRepresentation = getRepresentation(request);
         return webClient.post()
-                .uri("http://localhost:8180/admin/realms/individualsAPI/users")
+                .uri(registrationUri)
                 .headers(headers -> {
                     headers.setBearerAuth(adminToken.substring(7));
                     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -114,7 +117,7 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
         );
     }
 
-    private Mono<RegistrationOrLoginResponseDTO> getToken(String email, String password) {
+    private Mono<AccessTokenDto> getToken(String email, String password) {
         return webClient.post()
                 .uri(authorizationUri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -126,7 +129,7 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
                         .with("password", password)
                         .with("scope", "openid"))
                 .retrieve()
-                .bodyToMono(RegistrationOrLoginResponseDTO.class)
+                .bodyToMono(AccessTokenDto.class)
                 .doOnSuccess(s -> log.info("Token obtained successfully"))
                 .doOnError(e -> log.error("Error obtaining token", e));
     }

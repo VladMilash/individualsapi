@@ -17,10 +17,11 @@ spring:
             user-name-attribute: preferred_username
             jwk-set-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}/protocol/openid-connect/certs
             authorization-uri: ${keycloak.auth-server-url}/realms/individualsAPI/protocol/openid-connect/token
+            registration-uri: ${keycloak.auth-server-url}/admin/realms/individualsAPI/users
         registration:
           keycloak:
             client-id: individualsAPI
-            client-secret: YPuHtc3OCznfe2QcZ9hUMJybT7OsLddo
+            client-secret: Xn4kGk3lEnxCiB0Garvm4vk9L48DWi9e
             authorization-grant-type: client_credentials
 
 logging:

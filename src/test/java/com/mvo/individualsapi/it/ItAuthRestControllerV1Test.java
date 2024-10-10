@@ -2,7 +2,7 @@ package com.mvo.individualsapi.it;
 
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
-import com.mvo.individualsapi.dto.RegistrationOrLoginResponseDTO;
+import com.mvo.individualsapi.dto.AccessTokenDto;
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ public class ItAuthRestControllerV1Test {
     private WebTestClient webTestClient;
 
     private RegistrationOrLoginRequestDTO requestDTO;
-    private RegistrationOrLoginResponseDTO registrationResponseDTO;
+    private AccessTokenDto registrationResponseDTO;
 
     @BeforeEach
     void setUp() {
@@ -46,7 +46,7 @@ public class ItAuthRestControllerV1Test {
                 .bodyValue(requestDTO)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(RegistrationOrLoginResponseDTO.class)
+                .expectBody(AccessTokenDto.class)
                 .returnResult()
                 .getResponseBody();
 
@@ -65,7 +65,7 @@ public class ItAuthRestControllerV1Test {
                 .bodyValue(requestDTO)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(RegistrationOrLoginResponseDTO.class)
+                .expectBody(AccessTokenDto.class)
                 .value(loginResponse -> {
                     assertNotNull(loginResponse.getAccessToken());
                     assertNotNull(loginResponse.getRefreshToken());
@@ -99,13 +99,13 @@ public class ItAuthRestControllerV1Test {
                 .refreshToken(registrationResponseDTO.getRefreshToken())
                 .build();
 
-        RegistrationOrLoginResponseDTO responseDTO = webTestClient.post()
+        AccessTokenDto responseDTO = webTestClient.post()
                 .uri("/api/v1/auth/refresh")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(refreshTokenRequestDTO)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(RegistrationOrLoginResponseDTO.class)
+                .expectBody(AccessTokenDto.class)
                 .returnResult()
                 .getResponseBody();
 
