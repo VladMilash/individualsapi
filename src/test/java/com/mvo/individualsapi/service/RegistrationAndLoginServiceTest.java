@@ -3,24 +3,17 @@ package com.mvo.individualsapi.service;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.dto.AccessTokenDto;
 import com.mvo.individualsapi.service.impl.RegistrationAndLoginServiceImpl;
+import com.mvo.individualsapi.service.keycloak.impl.KeyCloakClientImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.web.reactive.function.BodyInserter;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.Map;
-import java.util.function.Consumer;
-
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,22 +21,17 @@ import static org.mockito.Mockito.when;
 class RegistrationAndLoginServiceTest {
 
     @Mock
-    private WebClient webClient;
-
+    private KeyCloakClientImpl keyCloakClientImpl;
     @InjectMocks
     private RegistrationAndLoginServiceImpl service;
 
-    private WebClient.RequestBodyUriSpec requestBodyUriSpec;
-    private WebClient.RequestBodySpec requestBodySpec;
-    private WebClient.ResponseSpec responseSpec;
     private RegistrationOrLoginRequestDTO testRequestDTO;
+
     private AccessTokenDto expectedResponse;
 
     @BeforeEach
     void setUp() {
         setupTestData();
-        setupWebClientMocks();
-        setupServiceProperties();
     }
 
     private void setupTestData() {
@@ -59,34 +47,12 @@ class RegistrationAndLoginServiceTest {
                 .build();
     }
 
-    private void setupWebClientMocks() {
-        requestBodyUriSpec = mock(WebClient.RequestBodyUriSpec.class);
-        requestBodySpec = mock(WebClient.RequestBodySpec.class);
-        responseSpec = mock(WebClient.ResponseSpec.class);
-
-        when(webClient.post()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri(anyString())).thenReturn(requestBodySpec);
-        when(requestBodySpec.contentType(any(MediaType.class))).thenReturn(requestBodySpec);
-        when(requestBodySpec.body(any(BodyInserter.class))).thenReturn(requestBodySpec);
-        when(requestBodySpec.retrieve()).thenReturn(responseSpec);
-    }
-
-    private void setupServiceProperties() {
-        ReflectionTestUtils.setField(service, "keycloakIssuerUri", "http://keycloak");
-        ReflectionTestUtils.setField(service, "clientId", "test-client");
-        ReflectionTestUtils.setField(service, "clientSecret", "test-secret");
-        ReflectionTestUtils.setField(service, "authorizationUri", "http://auth");
-        ReflectionTestUtils.setField(service, "registrationUri", "http://registr");
-    }
-
     @Test
     void testRegistrationUser_Success() {
-        when(requestBodySpec.headers(any(Consumer.class))).thenReturn(requestBodySpec);
-        when(requestBodySpec.exchangeToMono(any())).thenReturn(Mono.empty());
-        when(responseSpec.bodyToMono(Map.class))
-                .thenReturn(Mono.just(Map.of("access_token", "admin-token")));
-        when(responseSpec.bodyToMono(AccessTokenDto.class))
-                .thenReturn(Mono.just(expectedResponse));
+        String adminTokenTest = "admin-token-test";
+        when(keyCloakClientImpl.createUser(any(RegistrationOrLoginRequestDTO.class), any(String.class))).thenReturn(Mono.empty());
+        when(keyCloakClientImpl.getAdminToken()).thenReturn(Mono.just(adminTokenTest));
+        when(keyCloakClientImpl.getToken(any(String.class), any(String.class))).thenReturn(Mono.just(expectedResponse));
 
         StepVerifier.create(service.registrationUser(testRequestDTO))
                 .expectNext(expectedResponse)
@@ -95,9 +61,7 @@ class RegistrationAndLoginServiceTest {
 
     @Test
     void testLoginUser_Success() {
-        when(responseSpec.bodyToMono(AccessTokenDto.class))
-                .thenReturn(Mono.just(expectedResponse));
-
+        when(keyCloakClientImpl.getToken(any(String.class), any(String.class))).thenReturn(Mono.just(expectedResponse));
         StepVerifier.create(service.loginUser(testRequestDTO))
                 .expectNext(expectedResponse)
                 .verifyComplete();

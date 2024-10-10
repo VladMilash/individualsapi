@@ -4,52 +4,32 @@ import com.mvo.individualsapi.dto.AccessTokenDto;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.exception.PasswordsMatchException;
 import com.mvo.individualsapi.service.RegistrationAndLoginService;
+import com.mvo.individualsapi.service.keycloak.KeyCloakClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginService {
-    private final WebClient webClient;
 
-    @Value("${spring.security.oauth2.client.provider.keycloak.issuer-uri}")
-    private String keycloakIssuerUri;
-
-    @Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
-    private String clientId;
-
-    @Value("${spring.security.oauth2.client.registration.keycloak.client-secret}")
-    private String clientSecret;
-
-    @Value("${spring.security.oauth2.client.provider.keycloak.authorization-uri}")
-    private String authorizationUri;
-
-    @Value("${spring.security.oauth2.client.provider.keycloak.registration-uri}")
-    private String registrationUri;
+    private final KeyCloakClient keyCloakClient;
 
     @Override
     public Mono<AccessTokenDto> registrationUser(RegistrationOrLoginRequestDTO request) {
         return validatePasswords(request)
-                .then(getAdminToken())
-                .flatMap(adminToken -> createUser(request, adminToken))
-                .then(getToken(request.getEmail(), request.getPassword()))
+                .then(keyCloakClient.getAdminToken())
+                .flatMap(adminToken -> keyCloakClient.createUser(request, adminToken))
+                .then(keyCloakClient.getToken(request.getEmail(), request.getPassword()))
                 .doOnError(e -> log.error("Error during user registration: ", e));
     }
 
     @Override
     public Mono<AccessTokenDto> loginUser(RegistrationOrLoginRequestDTO request) {
         return validatePasswords(request)
-                .then(getToken(request.getEmail(), request.getPassword()))
+                .then(keyCloakClient.getToken(request.getEmail(), request.getPassword()))
                 .doOnSuccess(response -> log.info("Success login user with email {} ", request.getEmail()))
                 .doOnError(e -> log.error("Error during user login: ", e));
     }
@@ -59,78 +39,5 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
             return Mono.error(new PasswordsMatchException("Passwords do not match", "PASSWORDS_DO_NOT_MATCH"));
         }
         return Mono.empty();
-    }
-
-    private Mono<String> getAdminToken() {
-        return webClient.post()
-                .uri(keycloakIssuerUri + "/protocol/openid-connect/token")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("grant_type", "client_credentials")
-                        .with("client_id", clientId)
-                        .with("client_secret", clientSecret))
-                .retrieve()
-                .bodyToMono(Map.class)
-                .map(response -> "Bearer " + response.get("access_token"))
-                .doOnSuccess(response -> log.info("Success get admin token for client_id {},", clientId))
-                .doOnError(e -> log.error("Error obtaining admin token: ", e));
-    }
-
-    private Mono<Void> createUser(RegistrationOrLoginRequestDTO request, String adminToken) {
-        Map<String, Object> userRepresentation = getRepresentation(request);
-        return webClient.post()
-                .uri(registrationUri)
-                .headers(headers -> {
-                    headers.setBearerAuth(adminToken.substring(7));
-                    headers.setContentType(MediaType.APPLICATION_JSON);
-                })
-                .body(BodyInserters.fromValue(userRepresentation))
-                .exchangeToMono(response -> {
-                    if (response.statusCode() == HttpStatus.CREATED) {
-                        log.info("User created successfully");
-                        return Mono.empty();
-                    } else {
-                        return response.bodyToMono(String.class)
-                                .flatMap(errorBody -> {
-                                    log.error("Failed to create user. Status: {}. Body: {}",
-                                            response.statusCode(), errorBody);
-                                    return Mono.error(new RuntimeException("Failed to create user: " + errorBody));
-                                });
-                    }
-                });
-    }
-
-
-    private static Map<String, Object> getRepresentation(RegistrationOrLoginRequestDTO request) {
-        return Map.of(
-                "username", request.getEmail(),
-                "email", request.getEmail(),
-                "enabled", true,
-                "emailVerified", true,
-                "credentials", java.util.List.of(
-                        Map.of(
-                                "type", "password",
-                                "value", request.getPassword(),
-                                "temporary", false
-                        )
-                )
-        );
-    }
-
-    private Mono<AccessTokenDto> getToken(String email, String password) {
-        return webClient.post()
-                .uri(authorizationUri)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(BodyInserters
-                        .fromFormData("grant_type", "password")
-                        .with("client_id", clientId)
-                        .with("client_secret", clientSecret)
-                        .with("username", email)
-                        .with("password", password)
-                        .with("scope", "openid"))
-                .retrieve()
-                .bodyToMono(AccessTokenDto.class)
-                .doOnSuccess(s -> log.info("Token obtained successfully"))
-                .doOnError(e -> log.error("Error obtaining token", e));
     }
 }
