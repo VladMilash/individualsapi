@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder(toBuilder = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AccessTokenDto {
+public class AccessTokenDTO {
     private String accessToken;
     private int expiresIn;
     private String refreshToken;

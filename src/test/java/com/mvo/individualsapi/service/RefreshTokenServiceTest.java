@@ -1,7 +1,7 @@
 package com.mvo.individualsapi.service;
 
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
-import com.mvo.individualsapi.dto.AccessTokenDto;
+import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.service.impl.RefreshTokenServiceImpl;
 import com.mvo.individualsapi.service.keycloak.impl.KeyCloakClientImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ class RefreshTokenServiceTest {
     @InjectMocks
     private RefreshTokenServiceImpl service;
     private RefreshTokenRequestDTO testRequestDTO;
-    private AccessTokenDto expectedResponse;
+    private AccessTokenDTO expectedResponse;
 
     @BeforeEach
     void setUp() {
@@ -37,7 +37,7 @@ class RefreshTokenServiceTest {
                 .refreshToken("test-refresh-token")
                 .build();
 
-        expectedResponse = new AccessTokenDto().toBuilder()
+        expectedResponse = new AccessTokenDTO().toBuilder()
                 .accessToken("new-access-token")
                 .refreshToken("new-refresh-token")
                 .build();

@@ -1,6 +1,6 @@
 package com.mvo.individualsapi.service.impl;
 
-import com.mvo.individualsapi.dto.AccessTokenDto;
+import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.exception.PasswordsMatchException;
 import com.mvo.individualsapi.service.RegistrationAndLoginService;
@@ -18,7 +18,7 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
     private final KeyCloakClient keyCloakClient;
 
     @Override
-    public Mono<AccessTokenDto> registrationUser(RegistrationOrLoginRequestDTO request) {
+    public Mono<AccessTokenDTO> registrationUser(RegistrationOrLoginRequestDTO request) {
         return validatePasswords(request)
                 .then(keyCloakClient.getAdminToken())
                 .flatMap(adminToken -> keyCloakClient.createUser(request, adminToken))
@@ -27,7 +27,7 @@ public class RegistrationAndLoginServiceImpl implements RegistrationAndLoginServ
     }
 
     @Override
-    public Mono<AccessTokenDto> loginUser(RegistrationOrLoginRequestDTO request) {
+    public Mono<AccessTokenDTO> loginUser(RegistrationOrLoginRequestDTO request) {
         return validatePasswords(request)
                 .then(keyCloakClient.getToken(request.getEmail(), request.getPassword()))
                 .doOnSuccess(response -> log.info("Success login user with email {} ", request.getEmail()))

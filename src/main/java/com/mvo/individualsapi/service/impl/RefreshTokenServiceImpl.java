@@ -1,7 +1,7 @@
 package com.mvo.individualsapi.service.impl;
 
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
-import com.mvo.individualsapi.dto.AccessTokenDto;
+import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.service.RefreshTokenService;
 import com.mvo.individualsapi.service.keycloak.KeyCloakClient;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     private final KeyCloakClient keyCloakClient;
     
     @Override
-    public Mono<AccessTokenDto>  refreshToken(RefreshTokenRequestDTO request) {
+    public Mono<AccessTokenDTO>  refreshToken(RefreshTokenRequestDTO request) {
         return keyCloakClient.refreshToken(request);
     }
 }

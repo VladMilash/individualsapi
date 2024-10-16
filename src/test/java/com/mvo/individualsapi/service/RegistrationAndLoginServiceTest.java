@@ -1,7 +1,7 @@
 package com.mvo.individualsapi.service;
 
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
-import com.mvo.individualsapi.dto.AccessTokenDto;
+import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.service.impl.RegistrationAndLoginServiceImpl;
 import com.mvo.individualsapi.service.keycloak.impl.KeyCloakClientImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ class RegistrationAndLoginServiceTest {
 
     private RegistrationOrLoginRequestDTO testRequestDTO;
 
-    private AccessTokenDto expectedResponse;
+    private AccessTokenDTO expectedResponse;
 
     @BeforeEach
     void setUp() {
@@ -41,7 +41,7 @@ class RegistrationAndLoginServiceTest {
                 .confirmPassword("password")
                 .build();
 
-        expectedResponse = new AccessTokenDto().toBuilder()
+        expectedResponse = new AccessTokenDTO().toBuilder()
                 .accessToken("new-access-token")
                 .refreshToken("new-refresh-token")
                 .build();

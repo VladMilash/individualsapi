@@ -1,6 +1,6 @@
 package com.mvo.individualsapi.service.keycloak;
 
-import com.mvo.individualsapi.dto.AccessTokenDto;
+import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
@@ -11,9 +11,9 @@ public interface KeyCloakClient {
 
     Mono<Void> createUser(RegistrationOrLoginRequestDTO request, String adminToken);
 
-    Mono<AccessTokenDto> getToken(String email, String password);
+    Mono<AccessTokenDTO> getToken(String email, String password);
 
-    Mono<AccessTokenDto> refreshToken(RefreshTokenRequestDTO request);
+    Mono<AccessTokenDTO> refreshToken(RefreshTokenRequestDTO request);
 
     Mono<UserinfoResponseDTO> getUserinfo(String token);
 }

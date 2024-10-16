@@ -1,6 +1,6 @@
 package com.mvo.individualsapi.service.keycloak.impl;
 
-import com.mvo.individualsapi.dto.AccessTokenDto;
+import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
@@ -80,7 +80,7 @@ public class KeyCloakClientImpl implements KeyCloakClient {
 
 
     @Override
-    public Mono<AccessTokenDto> getToken(String email, String password) {
+    public Mono<AccessTokenDTO> getToken(String email, String password) {
         return webClient.post()
                 .uri(authorizationUri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -92,13 +92,13 @@ public class KeyCloakClientImpl implements KeyCloakClient {
                         .with("password", password)
                         .with("scope", "openid"))
                 .retrieve()
-                .bodyToMono(AccessTokenDto.class)
+                .bodyToMono(AccessTokenDTO.class)
                 .doOnSuccess(s -> log.info("Token obtained successfully"))
                 .doOnError(e -> log.error("Error obtaining token", e));
     }
 
     @Override
-    public Mono<AccessTokenDto> refreshToken(RefreshTokenRequestDTO request) {
+    public Mono<AccessTokenDTO> refreshToken(RefreshTokenRequestDTO request) {
         return webClient.post()
                 .uri(authorizationUri)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -109,7 +109,7 @@ public class KeyCloakClientImpl implements KeyCloakClient {
                         .with("refresh_token", request.getRefreshToken())
                         .with("scope", "openid"))
                 .retrieve()
-                .bodyToMono(AccessTokenDto.class)
+                .bodyToMono(AccessTokenDTO.class)
                 .doOnSuccess(s -> log.info("Token refreshed successfully"))
                 .doOnError(e -> log.error("Error refresh token", e));
     }
