@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Service
@@ -24,8 +25,19 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     public Mono<UserDTO> registrationUser(RegistrationRequestDTO request) {
         return webClient.post()
                 .uri("http://localhost:8084/v1/api/registration/")
+                .headers(headers -> {
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                })
                 .body(BodyInserters.fromValue(request))
                 .retrieve()
                 .bodyToMono(UserDTO.class);
+    }
+
+    @Override
+    public Flux<UserDTO> getAllUser() {
+        return webClient.get()
+                .uri("http://localhost:8084/v1/api/users/")
+                .retrieve()
+                .bodyToFlux(UserDTO.class);
     }
 }
