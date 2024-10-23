@@ -34,7 +34,7 @@ public class KeyCloakClientImpl implements KeyCloakClient {
     @Value("${spring.security.oauth2.client.provider.keycloak.authorization-uri}")
     private String authorizationUri;
 
-    @Value("${spring.security.oauth2.client.provider.keycloak.registration-uri}")
+    @Value("${keycloak.registration-uri}")
     private String registrationUri;
 
     @Override

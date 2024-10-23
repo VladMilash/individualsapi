@@ -7,6 +7,9 @@ keycloak:
   admin-username: admin
   admin-password: admin
 
+  registration-uri: ${keycloak.auth-server-url}/admin/realms/individualsAPI/users
+
+
 spring:
   security:
     oauth2:
@@ -17,7 +20,6 @@ spring:
             user-name-attribute: preferred_username
             jwk-set-uri: ${keycloak.auth-server-url}/realms/${keycloak.realm}/protocol/openid-connect/certs
             authorization-uri: ${keycloak.auth-server-url}/realms/individualsAPI/protocol/openid-connect/token
-            registration-uri: ${keycloak.auth-server-url}/admin/realms/individualsAPI/users
         registration:
           keycloak:
             client-id: individualsAPI

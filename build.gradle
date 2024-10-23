@@ -20,6 +20,7 @@ configurations {
 }
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -36,6 +37,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'com.mvo:common:1.0.0'
 }
 
 tasks.named('test') {

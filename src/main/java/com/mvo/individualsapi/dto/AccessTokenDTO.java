@@ -19,5 +19,4 @@ public class AccessTokenDTO {
     private int expiresIn;
     private String refreshToken;
     private String tokenType;
-
 }
