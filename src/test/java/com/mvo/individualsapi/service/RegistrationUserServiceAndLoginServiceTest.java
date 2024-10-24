@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RegistrationAndLoginServiceTest {
+class RegistrationUserServiceAndLoginServiceTest {
 
     @Mock
     private KeyCloakClientImpl keyCloakClientImpl;
