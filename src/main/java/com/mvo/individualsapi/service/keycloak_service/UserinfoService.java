@@ -1,4 +1,4 @@
-package com.mvo.individualsapi.service;
+package com.mvo.individualsapi.service.keycloak_service;
 
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
 import reactor.core.publisher.Mono;

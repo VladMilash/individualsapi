@@ -1,10 +1,10 @@
-package com.mvo.individualsapi.service.impl;
+package com.mvo.individualsapi.service.keycloak_service.impl;
 
 import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.exception.PasswordsMatchException;
-import com.mvo.individualsapi.service.RegistrationAndLoginService;
-import com.mvo.individualsapi.service.keycloak.KeyCloakClient;
+import com.mvo.individualsapi.service.keycloak_service.RegistrationAndLoginService;
+import com.mvo.individualsapi.service.keycloak_client.KeyCloakClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

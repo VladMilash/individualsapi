@@ -2,8 +2,8 @@ package com.mvo.individualsapi.service;
 
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.dto.AccessTokenDTO;
-import com.mvo.individualsapi.service.impl.RegistrationAndLoginServiceImpl;
-import com.mvo.individualsapi.service.keycloak.impl.KeyCloakClientImpl;
+import com.mvo.individualsapi.service.keycloak_service.impl.RegistrationAndLoginServiceImpl;
+import com.mvo.individualsapi.service.keycloak_client.impl.KeyCloakClientImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

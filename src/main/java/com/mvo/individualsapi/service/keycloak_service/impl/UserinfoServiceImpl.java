@@ -1,8 +1,8 @@
-package com.mvo.individualsapi.service.impl;
+package com.mvo.individualsapi.service.keycloak_service.impl;
 
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
-import com.mvo.individualsapi.service.UserinfoService;
-import com.mvo.individualsapi.service.keycloak.KeyCloakClient;
+import com.mvo.individualsapi.service.keycloak_service.UserinfoService;
+import com.mvo.individualsapi.service.keycloak_client.KeyCloakClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

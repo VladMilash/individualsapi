@@ -1,4 +1,4 @@
-package com.mvo.individualsapi.service;
+package com.mvo.individualsapi.service.keycloak_service;
 
 import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;

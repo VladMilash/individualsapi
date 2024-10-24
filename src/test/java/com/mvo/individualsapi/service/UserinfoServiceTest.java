@@ -1,8 +1,8 @@
 package com.mvo.individualsapi.service;
 
 import com.mvo.individualsapi.dto.UserinfoResponseDTO;
-import com.mvo.individualsapi.service.impl.UserinfoServiceImpl;
-import com.mvo.individualsapi.service.keycloak.impl.KeyCloakClientImpl;
+import com.mvo.individualsapi.service.keycloak_service.impl.UserinfoServiceImpl;
+import com.mvo.individualsapi.service.keycloak_client.impl.KeyCloakClientImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

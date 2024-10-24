@@ -1,9 +1,9 @@
-package com.mvo.individualsapi.service.impl;
+package com.mvo.individualsapi.service.keycloak_service.impl;
 
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
 import com.mvo.individualsapi.dto.AccessTokenDTO;
-import com.mvo.individualsapi.service.RefreshTokenService;
-import com.mvo.individualsapi.service.keycloak.KeyCloakClient;
+import com.mvo.individualsapi.service.keycloak_service.RefreshTokenService;
+import com.mvo.individualsapi.service.keycloak_client.KeyCloakClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

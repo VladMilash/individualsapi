@@ -32,7 +32,8 @@ public class SecurityConfiguration {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(customizer -> customizer
-                        .pathMatchers("api/v1/auth/registration","api/v1/auth/login","api/v1/auth/refresh", "api/v2/auth/registration", "api/v2/auth/users" ).permitAll()
+                        .pathMatchers("api/v1/auth/registration", "api/v1/auth/login",
+                                "api/v1/auth/refresh", "api/v2/auth/registration").permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(customizer -> customizer.jwt(jwt -> {
                     ReactiveJwtAuthenticationConverter jwtAuthenticationConverter = new ReactiveJwtAuthenticationConverter();

@@ -1,4 +1,4 @@
-package com.mvo.individualsapi.service.keycloak;
+package com.mvo.individualsapi.service.keycloak_client;
 
 import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
