@@ -9,7 +9,6 @@ import com.mvo.individualsapi.service.person_service_client.PersonServiceClient;
 import dto.RegistrationRequestDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -29,15 +28,11 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
                                 request.password(), request.confirmPassword()))
                         .onErrorResume(error -> {
                             log.error("Registration user in keycloak error", error);
-                            return doRollback(request)
+                            return personServiceClient.doRollBeckRegistration(request)
                                     .then(Mono.error(error));
 
                         })
                 );
-    }
-
-    private Mono<Void> doRollback(RegistrationRequestDTO request) {
-        return Mono.empty();
     }
 }
 

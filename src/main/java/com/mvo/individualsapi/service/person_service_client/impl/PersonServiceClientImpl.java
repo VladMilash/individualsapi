@@ -28,4 +28,17 @@ public class PersonServiceClientImpl implements PersonServiceClient {
                 .doOnNext(response -> log.info("Response received: {}", response))
                 .doOnError(error -> log.error("Error occurred: {}", error.getMessage()));
     }
+
+    @Override
+    public Mono<Void> doRollBeckRegistration(RegistrationRequestDTO request) {
+        return webClient.post()
+                .uri("http://localhost:8084/v1/api/registration/rollback")
+                .headers(headers -> headers.setContentType(MediaType.APPLICATION_JSON))
+                .bodyValue(request)
+                .retrieve()
+                .toBodilessEntity()
+                .doOnSuccess(response -> log.info("RollBeck operation finished success"))
+                .doOnError(error -> log.error("Failed to rollback registration", error))
+                .then();
+    }
 }

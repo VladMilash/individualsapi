@@ -6,4 +6,5 @@ import reactor.core.publisher.Mono;
 
 public interface PersonServiceClient {
     Mono<UserDTO> registrationUser(RegistrationRequestDTO request);
+    Mono<Void> doRollBeckRegistration(RegistrationRequestDTO request);
 }
