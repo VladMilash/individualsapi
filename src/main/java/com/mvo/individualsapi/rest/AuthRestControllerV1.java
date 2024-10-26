@@ -8,13 +8,18 @@ import com.mvo.individualsapi.service.keycloak_service.RefreshTokenService;
 import com.mvo.individualsapi.service.keycloak_service.RegistrationAndLoginService;
 import com.mvo.individualsapi.service.keycloak_service.UserinfoService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.security.Principal;
+
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/auth/")

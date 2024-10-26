@@ -24,13 +24,12 @@ public class RegistrationUserServiceImpl implements RegistrationUserService {
         return personServiceClient.registrationUser(request)
                 .switchIfEmpty(Mono.error(new ApiException("Registration user in person service error", "PERSON_SERVICE_REGISTRATION_ERROR")))
                 .doOnError(error -> log.error("Registration user in person service error"))
-                .then(registrationAndLoginService.registrationUser(new RegistrationOrLoginRequestDTO(request.email(),
+                .flatMap(user -> registrationAndLoginService.registrationUser(new RegistrationOrLoginRequestDTO(request.email(),
                                 request.password(), request.confirmPassword()))
                         .onErrorResume(error -> {
                             log.error("Registration user in keycloak error", error);
-                            return personServiceClient.doRollBeckRegistration(request)
+                            return personServiceClient.doRollBeckRegistration(user.id())
                                     .then(Mono.error(error));
-
                         })
                 );
     }

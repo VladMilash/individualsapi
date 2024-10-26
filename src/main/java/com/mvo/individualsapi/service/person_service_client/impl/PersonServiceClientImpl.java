@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -30,15 +32,25 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     }
 
     @Override
-    public Mono<Void> doRollBeckRegistration(RegistrationRequestDTO request) {
-        return webClient.post()
-                .uri("http://localhost:8084/v1/api/registration/rollback")
-                .headers(headers -> headers.setContentType(MediaType.APPLICATION_JSON))
-                .bodyValue(request)
+    public Mono<Void> doRollBeckRegistration(UUID userId) {
+        return webClient.delete()
+                .uri("http://localhost:8084/v1/api/registration/rollback/{userId}", userId)
                 .retrieve()
                 .toBodilessEntity()
                 .doOnSuccess(response -> log.info("RollBeck operation finished success"))
                 .doOnError(error -> log.error("Failed to rollback registration", error))
                 .then();
+    }
+
+    @Override
+    public Mono<UserDTO> getUserInfo(UUID id) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("http://localhost:8084/v1/api/users/{id}")
+                        .build(id))
+                .retrieve()
+                .bodyToMono(UserDTO.class)
+                .doOnNext(response -> log.info("Response received: {}", response))
+                .doOnError(error -> log.error("Error occurred: {}", error.getMessage()));
     }
 }
