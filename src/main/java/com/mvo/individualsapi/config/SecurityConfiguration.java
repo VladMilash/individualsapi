@@ -23,7 +23,7 @@ public class SecurityConfiguration {
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
         return NimbusReactiveJwtDecoder
-                .withJwkSetUri("http://localhost:8180/realms/individualsAPI/protocol/openid-connect/certs")
+                .withJwkSetUri("http://localhost:8081/realms/individualsAPI/protocol/openid-connect/certs")
                 .build();
     }
 

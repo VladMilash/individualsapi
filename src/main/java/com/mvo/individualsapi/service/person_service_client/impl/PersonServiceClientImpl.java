@@ -43,11 +43,9 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     }
 
     @Override
-    public Mono<UserDTO> getUserInfo(UUID id) {
+    public Mono<UserDTO> getUserInfo(String email) {
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("http://localhost:8084/v1/api/users/{id}")
-                        .build(id))
+                .uri("http://localhost:8084/v1/api/users/{email}", email)
                 .retrieve()
                 .bodyToMono(UserDTO.class)
                 .doOnNext(response -> log.info("Response received: {}", response))

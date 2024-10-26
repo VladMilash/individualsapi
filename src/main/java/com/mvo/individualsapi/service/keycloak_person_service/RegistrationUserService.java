@@ -6,6 +6,8 @@ import dto.RegistrationRequestDTO;
 import dto.UserDTO;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 public interface RegistrationUserService {
     Mono<AccessTokenDTO> registrationUser(RegistrationRequestDTO request);
 }

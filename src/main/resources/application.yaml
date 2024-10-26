@@ -23,7 +23,7 @@ spring:
         registration:
           keycloak:
             client-id: individualsAPI
-            client-secret: hg5bdZ2Hl14d28ANsSljxfksRjIHN4TE
+            client-secret: Ud2jXtJ6sDGerTTh5MQtbrunZGI7HPRy
             authorization-grant-type: client_credentials
 
 logging:

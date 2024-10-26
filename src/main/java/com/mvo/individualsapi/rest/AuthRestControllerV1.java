@@ -47,6 +47,7 @@ public class AuthRestControllerV1 {
                         .map(userinfoResponseDTO -> ResponseEntity
                                 .status(HttpStatus.OK)
                                 .body(userinfoResponseDTO)));
+
     }
 
     @PostMapping("/login")

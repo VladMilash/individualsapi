@@ -9,5 +9,5 @@ import java.util.UUID;
 public interface PersonServiceClient {
     Mono<UserDTO> registrationUser(RegistrationRequestDTO request);
     Mono<Void> doRollBeckRegistration(UUID userId);
-    Mono<UserDTO> getUserInfo(UUID id);
+    Mono<UserDTO> getUserInfo(String email);
 }
