@@ -1,6 +1,7 @@
 package com.mvo.individualsapi.service.person_service_client;
 
 import dto.AddressDTO;
+import dto.CountryDTO;
 import dto.RegistrationRequestDTO;
 import dto.UserDTO;
 import reactor.core.publisher.Mono;
@@ -15,4 +16,6 @@ public interface PersonServiceClient {
     Mono<UserDTO> getUserInfo(String email);
 
     Mono<AddressDTO> getUserAddress(UUID userId);
+
+    Mono<CountryDTO> getUserCountry(UUID userId);
 }

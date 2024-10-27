@@ -1,9 +1,11 @@
 package com.mvo.individualsapi.service.keycloak_person_service.impl;
 
+import com.mvo.individualsapi.exception.ApiException;
 import com.mvo.individualsapi.service.keycloak_person_service.UserService;
 import com.mvo.individualsapi.service.keycloak_service.UserinfoService;
 import com.mvo.individualsapi.service.person_service_client.PersonServiceClient;
 import dto.AddressDTO;
+import dto.CountryDTO;
 import dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,16 @@ public class UserServiceImpl implements UserService {
                 .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
                 .flatMap(userDTO -> personServiceClient.getUserAddress(userDTO.id()))
                 .doOnSuccess(userDTO -> log.info("Operation get user address, for user with id {} finished success", userDTO.id()))
-                .doOnError(error -> log.error("Failed operation get user info", error));
+                .doOnError(error -> log.error("Failed operation get user address", error));
 
+    }
+
+    @Override
+    public Mono<CountryDTO> getUserCountry(String token) {
+        return userinfoService.getUserinfo(token)
+                .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
+                .flatMap(userDTO -> personServiceClient.getUserCountry(userDTO.id()))
+                .doOnSuccess(userDTO -> log.info("Operation get user country, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation get user country", error));
     }
 }
