@@ -3,6 +3,7 @@ package com.mvo.individualsapi.service.keycloak_person_service.impl;
 import com.mvo.individualsapi.service.keycloak_person_service.UserService;
 import com.mvo.individualsapi.service.keycloak_service.UserinfoService;
 import com.mvo.individualsapi.service.person_service_client.PersonServiceClient;
+import dto.AddressDTO;
 import dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,5 +23,15 @@ public class UserServiceImpl implements UserService {
                 .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
                 .doOnSuccess(userDTO -> log.info("Operation get user info, for user with id {} finished success", userDTO.id()))
                 .doOnError(error -> log.error("Failed operation get user info", error));
+    }
+
+    @Override
+    public Mono<AddressDTO> getUserAddress(String token) {
+        return userinfoService.getUserinfo(token)
+                .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
+                .flatMap(userDTO -> personServiceClient.getUserAddress(userDTO.id()))
+                .doOnSuccess(userDTO -> log.info("Operation get user address, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation get user info", error));
+
     }
 }

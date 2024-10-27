@@ -1,6 +1,7 @@
 package com.mvo.individualsapi.service.person_service_client.impl;
 
 import com.mvo.individualsapi.service.person_service_client.PersonServiceClient;
+import dto.AddressDTO;
 import dto.RegistrationRequestDTO;
 import dto.UserDTO;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +46,19 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<UserDTO> getUserInfo(String email) {
         return webClient.get()
-                .uri("http://localhost:8084/v1/api/users/{email}", email)
+                .uri("http://localhost:8084/v1/api/users/email/{email}", email)
                 .retrieve()
                 .bodyToMono(UserDTO.class)
+                .doOnNext(response -> log.info("Response received: {}", response))
+                .doOnError(error -> log.error("Error occurred: {}", error.getMessage()));
+    }
+
+    @Override
+    public Mono<AddressDTO> getUserAddress(UUID userId) {
+        return webClient.get()
+                .uri("http://localhost:8084/v1/api/users/address/{userId}", userId)
+                .retrieve()
+                .bodyToMono(AddressDTO.class)
                 .doOnNext(response -> log.info("Response received: {}", response))
                 .doOnError(error -> log.error("Error occurred: {}", error.getMessage()));
     }

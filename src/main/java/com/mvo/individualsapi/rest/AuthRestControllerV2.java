@@ -1,14 +1,13 @@
 package com.mvo.individualsapi.rest;
 
 import com.mvo.individualsapi.dto.AccessTokenDTO;
-import com.mvo.individualsapi.dto.UserinfoResponseDTO;
 import com.mvo.individualsapi.service.keycloak_person_service.RegistrationUserService;
 import com.mvo.individualsapi.service.keycloak_person_service.UserService;
+import dto.AddressDTO;
 import dto.RegistrationRequestDTO;
 import dto.UserDTO;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ServerWebExchange;
@@ -27,11 +26,19 @@ public class AuthRestControllerV2 {
         return registrationUserService.registrationUser(request);
     }
 
-    @GetMapping("/info")
+    @GetMapping("info")
     public Mono<UserDTO> userinfo(ServerWebExchange exchange) {
         return exchange.getPrincipal()
                 .cast(JwtAuthenticationToken.class)
                 .map(authentication -> authentication.getToken().getTokenValue())
                 .flatMap(userService::getUserInfo);
+    }
+
+    @GetMapping("address")
+    public Mono<AddressDTO> getUserAddress(ServerWebExchange exchange) {
+        return exchange.getPrincipal()
+                .cast(JwtAuthenticationToken.class)
+                .map(authentication -> authentication.getToken().getTokenValue())
+                .flatMap(userService::getUserAddress);
     }
 }
