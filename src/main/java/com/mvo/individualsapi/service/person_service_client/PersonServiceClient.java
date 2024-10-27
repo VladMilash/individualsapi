@@ -17,4 +17,6 @@ public interface PersonServiceClient {
     Mono<CountryDTO> getUserCountry(UUID userId);
 
     Mono<IndividualDTO> getUserIndividual(UUID userId);
+
+    Mono<UserHistoryDTO> updateUser(UserDTO userDTO);
 }

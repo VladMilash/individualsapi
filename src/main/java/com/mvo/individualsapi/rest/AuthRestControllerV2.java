@@ -25,34 +25,37 @@ public class AuthRestControllerV2 {
 
     @GetMapping("info")
     public Mono<UserDTO> userinfo(ServerWebExchange exchange) {
-        return exchange.getPrincipal()
-                .cast(JwtAuthenticationToken.class)
-                .map(authentication -> authentication.getToken().getTokenValue())
+        return getMap(exchange)
                 .flatMap(userService::getUserInfo);
     }
 
     @GetMapping("address")
     public Mono<AddressDTO> getUserAddress(ServerWebExchange exchange) {
-        return exchange.getPrincipal()
-                .cast(JwtAuthenticationToken.class)
-                .map(authentication -> authentication.getToken().getTokenValue())
+        return getMap(exchange)
                 .flatMap(userService::getUserAddress);
     }
 
     @GetMapping("country")
     public Mono<CountryDTO> getUserCountry(ServerWebExchange exchange) {
-        return exchange.getPrincipal()
-                .cast(JwtAuthenticationToken.class)
-                .map(authentication -> authentication.getToken().getTokenValue())
+        return getMap(exchange)
                 .flatMap(userService::getUserCountry);
     }
 
     @GetMapping("individuals")
     public Mono<IndividualDTO> getUserIndividuals(ServerWebExchange exchange) {
+        return getMap(exchange)
+                .flatMap(userService::getUserIndividual);
+    }
+
+    @PutMapping
+    private Mono<UserHistoryDTO> updateUser(@RequestBody UserDTO userDTO) {
+        return userService.updateUser(userDTO);
+    }
+
+    private Mono<String> getMap(ServerWebExchange exchange) {
         return exchange.getPrincipal()
                 .cast(JwtAuthenticationToken.class)
-                .map(authentication -> authentication.getToken().getTokenValue())
-                .flatMap(userService::getUserIndividual);
+                .map(authentication -> authentication.getToken().getTokenValue());
     }
 
 }

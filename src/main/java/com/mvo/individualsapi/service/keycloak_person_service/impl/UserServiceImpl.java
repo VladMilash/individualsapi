@@ -4,10 +4,7 @@ import com.mvo.individualsapi.exception.ApiException;
 import com.mvo.individualsapi.service.keycloak_person_service.UserService;
 import com.mvo.individualsapi.service.keycloak_service.UserinfoService;
 import com.mvo.individualsapi.service.person_service_client.PersonServiceClient;
-import dto.AddressDTO;
-import dto.CountryDTO;
-import dto.IndividualDTO;
-import dto.UserDTO;
+import dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -54,5 +51,12 @@ public class UserServiceImpl implements UserService {
                 .flatMap(userDTO -> personServiceClient.getUserIndividual(userDTO.id()))
                 .doOnSuccess(userDTO -> log.info("Operation get user individuals, for user with id {} finished success", userDTO.id()))
                 .doOnError(error -> log.error("Failed operation get user individuals", error));
+    }
+
+    @Override
+    public Mono<UserHistoryDTO> updateUser(UserDTO userDTO) {
+        return personServiceClient.updateUser(userDTO)
+                .doOnSuccess(userHistoryDTO -> log.info("Operation update user individuals, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation update user individuals", error));
     }
 }
