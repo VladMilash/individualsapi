@@ -3,10 +3,7 @@ package com.mvo.individualsapi.rest;
 import com.mvo.individualsapi.dto.AccessTokenDTO;
 import com.mvo.individualsapi.service.keycloak_person_service.RegistrationUserService;
 import com.mvo.individualsapi.service.keycloak_person_service.UserService;
-import dto.AddressDTO;
-import dto.CountryDTO;
-import dto.RegistrationRequestDTO;
-import dto.UserDTO;
+import dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
@@ -48,6 +45,14 @@ public class AuthRestControllerV2 {
                 .cast(JwtAuthenticationToken.class)
                 .map(authentication -> authentication.getToken().getTokenValue())
                 .flatMap(userService::getUserCountry);
+    }
+
+    @GetMapping("individuals")
+    public Mono<IndividualDTO> getUserIndividuals(ServerWebExchange exchange) {
+        return exchange.getPrincipal()
+                .cast(JwtAuthenticationToken.class)
+                .map(authentication -> authentication.getToken().getTokenValue())
+                .flatMap(userService::getUserIndividual);
     }
 
 }

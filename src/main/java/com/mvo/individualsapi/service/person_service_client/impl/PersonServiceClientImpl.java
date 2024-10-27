@@ -1,10 +1,7 @@
 package com.mvo.individualsapi.service.person_service_client.impl;
 
 import com.mvo.individualsapi.service.person_service_client.PersonServiceClient;
-import dto.AddressDTO;
-import dto.CountryDTO;
-import dto.RegistrationRequestDTO;
-import dto.UserDTO;
+import dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -70,6 +67,16 @@ public class PersonServiceClientImpl implements PersonServiceClient {
                 .uri("http://localhost:8084/v1/api/users/country/{userId}", userId)
                 .retrieve()
                 .bodyToMono(CountryDTO.class)
+                .doOnNext(response -> log.info("Response received: {}", response))
+                .doOnError(error -> log.error("Error occurred: {}", error.getMessage()));
+    }
+
+    @Override
+    public Mono<IndividualDTO> getUserIndividual(UUID userId) {
+        return webClient.get()
+                .uri("http://localhost:8084/v1/api/users/individuals/{userId}", userId)
+                .retrieve()
+                .bodyToMono(IndividualDTO.class)
                 .doOnNext(response -> log.info("Response received: {}", response))
                 .doOnError(error -> log.error("Error occurred: {}", error.getMessage()));
     }

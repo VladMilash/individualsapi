@@ -2,6 +2,7 @@ package com.mvo.individualsapi.service.keycloak_person_service;
 
 import dto.AddressDTO;
 import dto.CountryDTO;
+import dto.IndividualDTO;
 import dto.UserDTO;
 import reactor.core.publisher.Mono;
 
@@ -11,4 +12,6 @@ public interface UserService {
     Mono<AddressDTO> getUserAddress(String token);
 
     Mono<CountryDTO> getUserCountry(String token);
+
+    Mono<IndividualDTO> getUserIndividual(String token);
 }
