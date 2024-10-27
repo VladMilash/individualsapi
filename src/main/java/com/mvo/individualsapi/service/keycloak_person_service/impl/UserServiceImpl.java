@@ -23,8 +23,8 @@ public class UserServiceImpl implements UserService {
     public Mono<UserDTO> getUserInfo(String token) {
         return userinfoService.getUserinfo(token)
                 .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
-                .doOnSuccess(userDTO -> log.info("Operation get user info, for user with id {} finished success", userDTO.id()))
-                .doOnError(error -> log.error("Failed operation get user info", error));
+                .doOnSuccess(userDTO -> log.info("Operation for get user info, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation for get user info", error));
     }
 
     @Override
@@ -32,8 +32,8 @@ public class UserServiceImpl implements UserService {
         return userinfoService.getUserinfo(token)
                 .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
                 .flatMap(userDTO -> personServiceClient.getUserAddress(userDTO.id()))
-                .doOnSuccess(userDTO -> log.info("Operation get user address, for user with id {} finished success", userDTO.id()))
-                .doOnError(error -> log.error("Failed operation get user address", error));
+                .doOnSuccess(userDTO -> log.info("Operation for get user address, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation for get user address", error));
 
     }
 
@@ -42,8 +42,8 @@ public class UserServiceImpl implements UserService {
         return userinfoService.getUserinfo(token)
                 .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
                 .flatMap(userDTO -> personServiceClient.getUserCountry(userDTO.id()))
-                .doOnSuccess(userDTO -> log.info("Operation get user country, for user with id {} finished success", userDTO.id()))
-                .doOnError(error -> log.error("Failed operation get user country", error));
+                .doOnSuccess(userDTO -> log.info("Operation for get user country, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation for get user country", error));
     }
 
     @Override
@@ -51,23 +51,30 @@ public class UserServiceImpl implements UserService {
         return userinfoService.getUserinfo(token)
                 .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
                 .flatMap(userDTO -> personServiceClient.getUserIndividual(userDTO.id()))
-                .doOnSuccess(userDTO -> log.info("Operation get user individuals, for user with id {} finished success", userDTO.id()))
-                .doOnError(error -> log.error("Failed operation get user individuals", error));
+                .doOnSuccess(userDTO -> log.info("Operation for get user individuals, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation for get user individuals", error));
     }
 
     @Override
     public Mono<UserHistoryDTO> updateUser(UserDTO userDTO) {
         return personServiceClient.updateUser(userDTO)
-                .doOnSuccess(userHistoryDTO -> log.info("Operation update user, for user with id {} finished success", userDTO.id()))
-                .doOnError(error -> log.error("Failed operation update user", error));
+                .doOnSuccess(userHistoryDTO -> log.info("Operation for update user, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation for update user", error));
     }
 
     @Override
     public Mono<UserHistoryDTO> updateUserAddress(String token, AddressDTO addressDTO) {
         return userinfoService.getUserinfo(token)
                 .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
-                .flatMap(userDTO -> personServiceClient.updateUserAddress(userDTO.id(),addressDTO))
-                .doOnSuccess(userDTO -> log.info("Operation update user address, for user with id {} finished success", userDTO.id()))
-                .doOnError(error -> log.error("Failed operation update user address", error));
+                .flatMap(userDTO -> personServiceClient.updateUserAddress(userDTO.id(), addressDTO))
+                .doOnSuccess(userDTO -> log.info("Operation for update user address, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation for update user address", error));
+    }
+
+    @Override
+    public Mono<UserHistoryDTO> updateUserIndividuals(IndividualDTO individualDTO) {
+        return personServiceClient.updateUserIndividuals(individualDTO)
+                .doOnSuccess(userHistoryDTO -> log.info("Operation for update user individuals, for user with id {} finished success", individualDTO.userId()))
+                .doOnError(error -> log.error("Failed operation for update user individuals", error));
     }
 }

@@ -48,15 +48,21 @@ public class AuthRestControllerV2 {
     }
 
     @PutMapping
-    private Mono<UserHistoryDTO> updateUser(@RequestBody UserDTO userDTO) {
+    public Mono<UserHistoryDTO> updateUser(@RequestBody UserDTO userDTO) {
         return userService.updateUser(userDTO);
     }
 
     @PutMapping("address")
-    private Mono<UserHistoryDTO> updateUserAddress(ServerWebExchange exchange, @RequestBody AddressDTO addressDTO) {
+    public Mono<UserHistoryDTO> updateUserAddress(ServerWebExchange exchange, @RequestBody AddressDTO addressDTO) {
         return getMap(exchange)
                 .flatMap(token -> userService.updateUserAddress(token, addressDTO));
     }
+
+    @PutMapping("individuals")
+    public Mono<UserHistoryDTO> updateUserIndividuals(@RequestBody IndividualDTO individualDTO) {
+        return userService.updateUserIndividuals(individualDTO);
+    }
+
 
     private Mono<String> getMap(ServerWebExchange exchange) {
         return exchange.getPrincipal()

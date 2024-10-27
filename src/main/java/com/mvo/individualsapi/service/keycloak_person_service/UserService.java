@@ -17,4 +17,6 @@ public interface UserService {
     Mono<UserHistoryDTO> updateUser(UserDTO userDTO);
 
     Mono<UserHistoryDTO> updateUserAddress(String token, AddressDTO addressDTO);
+
+    Mono<UserHistoryDTO> updateUserIndividuals(IndividualDTO individualDTO);
 }
