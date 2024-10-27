@@ -3,6 +3,7 @@ package com.mvo.individualsapi.it;
 import com.mvo.individualsapi.dto.RefreshTokenRequestDTO;
 import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.dto.AccessTokenDTO;
+import com.mvo.individualsapi.dto.UserinfoResponseDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,24 +72,24 @@ public class ItAuthRestControllerV1Test {
                 });
     }
 
-//    @Test
-//    void testUserInfo_Success() {
-//        testUserRegistration_Success();
-//
-//        UserinfoResponseDTO userinfoResponseDTO = webTestClient.get()
-//                .uri("/api/v1/auth/info")
-//                .headers(headers -> headers.setBearerAuth(registrationResponseDTO.getAccessToken()))
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody(UserinfoResponseDTO.class)
-//                .returnResult()
-//                .getResponseBody();
-//
-//        assertNotNull(userinfoResponseDTO);
-//        assertNotNull(userinfoResponseDTO.getSub());
-//        assertNotNull(userinfoResponseDTO.getPreferredUsername());
-//        assertNotNull(userinfoResponseDTO.getEmail());
-//    }
+    @Test
+    void testUserInfo_Success() {
+        testUserRegistration_Success();
+
+        UserinfoResponseDTO userinfoResponseDTO = webTestClient.get()
+                .uri("/api/v1/auth/info")
+                .headers(headers -> headers.setBearerAuth(registrationResponseDTO.getAccessToken()))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserinfoResponseDTO.class)
+                .returnResult()
+                .getResponseBody();
+
+        assertNotNull(userinfoResponseDTO);
+        assertNotNull(userinfoResponseDTO.getSub());
+        assertNotNull(userinfoResponseDTO.getPreferredUsername());
+        assertNotNull(userinfoResponseDTO.getEmail());
+    }
 
     @Test
     void testRefreshToken_Success() {

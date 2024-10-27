@@ -12,36 +12,36 @@ import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("api/v2/auth/")
+@RequestMapping("api/v2/auth")
 public class AuthRestControllerV2 {
     private final RegistrationUserService registrationUserService;
     private final UserService userService;
 
 
-    @PostMapping("registration")
+    @PostMapping("/registration")
     public Mono<AccessTokenDTO> registrationUser(@RequestBody RegistrationRequestDTO request) {
         return registrationUserService.registrationUser(request);
     }
 
-    @GetMapping("info")
+    @GetMapping("/info")
     public Mono<UserDTO> userinfo(ServerWebExchange exchange) {
         return getMap(exchange)
                 .flatMap(userService::getUserInfo);
     }
 
-    @GetMapping("address")
+    @GetMapping("/address")
     public Mono<AddressDTO> getUserAddress(ServerWebExchange exchange) {
         return getMap(exchange)
                 .flatMap(userService::getUserAddress);
     }
 
-    @GetMapping("country")
+    @GetMapping("/country")
     public Mono<CountryDTO> getUserCountry(ServerWebExchange exchange) {
         return getMap(exchange)
                 .flatMap(userService::getUserCountry);
     }
 
-    @GetMapping("individuals")
+    @GetMapping("/individuals")
     public Mono<IndividualDTO> getUserIndividuals(ServerWebExchange exchange) {
         return getMap(exchange)
                 .flatMap(userService::getUserIndividual);
@@ -52,13 +52,13 @@ public class AuthRestControllerV2 {
         return userService.updateUser(userDTO);
     }
 
-    @PutMapping("address")
+    @PutMapping("/address")
     public Mono<UserHistoryDTO> updateUserAddress(ServerWebExchange exchange, @RequestBody AddressDTO addressDTO) {
         return getMap(exchange)
                 .flatMap(token -> userService.updateUserAddress(token, addressDTO));
     }
 
-    @PutMapping("individuals")
+    @PutMapping("/individuals")
     public Mono<UserHistoryDTO> updateUserIndividuals(@RequestBody IndividualDTO individualDTO) {
         return userService.updateUserIndividuals(individualDTO);
     }
