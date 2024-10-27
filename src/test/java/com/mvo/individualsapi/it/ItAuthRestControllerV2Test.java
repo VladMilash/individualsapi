@@ -272,6 +272,7 @@ public class ItAuthRestControllerV2Test {
                     assertNotNull(historyDTO.id());
                     assertNotNull(historyDTO.reason());
                 });
+
     }
 
     @Test
