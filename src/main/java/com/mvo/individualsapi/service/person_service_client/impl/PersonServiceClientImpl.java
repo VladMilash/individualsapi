@@ -3,6 +3,7 @@ package com.mvo.individualsapi.service.person_service_client.impl;
 import com.mvo.individualsapi.service.person_service_client.PersonServiceClient;
 import dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,17 @@ import java.util.UUID;
 public class PersonServiceClientImpl implements PersonServiceClient {
     private final WebClient webClient;
 
+    @Value("${person-service.base-url}")
+    private String personServiceBaseUrl;
+
+    @Value("${person-service.registration-url}")
+    private String personServiceRegistrationUrl;
+
     @Override
     public Mono<UserDTO> registrationUser(RegistrationRequestDTO request) {
         log.info("Sending request: {}", request);
         return webClient.post()
-                .uri("http://localhost:8084/v1/api/registration/")
+                .uri(personServiceRegistrationUrl)
                 .headers(headers -> headers.setContentType(MediaType.APPLICATION_JSON))
                 .bodyValue(request)
                 .retrieve()
@@ -33,7 +40,7 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<Void> doRollBeckRegistration(UUID userId) {
         return webClient.delete()
-                .uri("http://localhost:8084/v1/api/registration/rollback/{userId}", userId)
+                .uri(personServiceRegistrationUrl + "rollback/{userId}", userId)
                 .retrieve()
                 .toBodilessEntity()
                 .doOnSuccess(response -> log.info("RollBeck operation finished success"))
@@ -44,7 +51,7 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<UserDTO> getUserInfo(String email) {
         return webClient.get()
-                .uri("http://localhost:8084/v1/api/users/email/{email}", email)
+                .uri(personServiceBaseUrl + "email/{email}", email)
                 .retrieve()
                 .bodyToMono(UserDTO.class)
                 .doOnNext(response -> log.info("Response received: {}", response))
@@ -54,7 +61,7 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<AddressDTO> getUserAddress(UUID userId) {
         return webClient.get()
-                .uri("http://localhost:8084/v1/api/users/address/{userId}", userId)
+                .uri(personServiceBaseUrl + "address/{userId}", userId)
                 .retrieve()
                 .bodyToMono(AddressDTO.class)
                 .doOnNext(response -> log.info("Response received: {}", response))
@@ -64,7 +71,7 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<CountryDTO> getUserCountry(UUID userId) {
         return webClient.get()
-                .uri("http://localhost:8084/v1/api/users/country/{userId}", userId)
+                .uri(personServiceBaseUrl + "country/{userId}", userId)
                 .retrieve()
                 .bodyToMono(CountryDTO.class)
                 .doOnNext(response -> log.info("Response received: {}", response))
@@ -74,7 +81,7 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<IndividualDTO> getUserIndividual(UUID userId) {
         return webClient.get()
-                .uri("http://localhost:8084/v1/api/users/individuals/{userId}", userId)
+                .uri(personServiceBaseUrl + "individuals/{userId}", userId)
                 .retrieve()
                 .bodyToMono(IndividualDTO.class)
                 .doOnNext(response -> log.info("Response received: {}", response))
@@ -84,7 +91,7 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<UserHistoryDTO> updateUser(UserDTO userDTO) {
         return webClient.put()
-                .uri("http://localhost:8084/v1/api/users/")
+                .uri(personServiceBaseUrl)
                 .bodyValue(userDTO)
                 .retrieve()
                 .bodyToMono(UserHistoryDTO.class)
@@ -95,7 +102,7 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<UserHistoryDTO> updateUserAddress(UUID userId, AddressDTO addressDTO) {
         return webClient.put()
-                .uri("http://localhost:8084/v1/api/users/address/{userId}", userId)
+                .uri(personServiceBaseUrl + "address/{userId}", userId)
                 .bodyValue(addressDTO)
                 .retrieve()
                 .bodyToMono(UserHistoryDTO.class)
@@ -106,7 +113,7 @@ public class PersonServiceClientImpl implements PersonServiceClient {
     @Override
     public Mono<UserHistoryDTO> updateUserIndividuals(IndividualDTO individualDTO) {
         return webClient.put()
-                .uri("http://localhost:8084/v1/api/users/individuals")
+                .uri(personServiceBaseUrl + "individuals")
                 .bodyValue(individualDTO)
                 .retrieve()
                 .bodyToMono(UserHistoryDTO.class)
