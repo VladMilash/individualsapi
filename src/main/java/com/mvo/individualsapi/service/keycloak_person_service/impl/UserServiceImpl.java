@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
@@ -56,7 +58,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public Mono<UserHistoryDTO> updateUser(UserDTO userDTO) {
         return personServiceClient.updateUser(userDTO)
-                .doOnSuccess(userHistoryDTO -> log.info("Operation update user individuals, for user with id {} finished success", userDTO.id()))
-                .doOnError(error -> log.error("Failed operation update user individuals", error));
+                .doOnSuccess(userHistoryDTO -> log.info("Operation update user, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation update user", error));
+    }
+
+    @Override
+    public Mono<UserHistoryDTO> updateUserAddress(String token, AddressDTO addressDTO) {
+        return userinfoService.getUserinfo(token)
+                .flatMap(userinfoResponseDTO -> personServiceClient.getUserInfo(userinfoResponseDTO.getEmail()))
+                .flatMap(userDTO -> personServiceClient.updateUserAddress(userDTO.id(),addressDTO))
+                .doOnSuccess(userDTO -> log.info("Operation update user address, for user with id {} finished success", userDTO.id()))
+                .doOnError(error -> log.error("Failed operation update user address", error));
     }
 }

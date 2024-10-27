@@ -52,6 +52,12 @@ public class AuthRestControllerV2 {
         return userService.updateUser(userDTO);
     }
 
+    @PutMapping("address")
+    private Mono<UserHistoryDTO> updateUserAddress(ServerWebExchange exchange, @RequestBody AddressDTO addressDTO) {
+        return getMap(exchange)
+                .flatMap(token -> userService.updateUserAddress(token, addressDTO));
+    }
+
     private Mono<String> getMap(ServerWebExchange exchange) {
         return exchange.getPrincipal()
                 .cast(JwtAuthenticationToken.class)

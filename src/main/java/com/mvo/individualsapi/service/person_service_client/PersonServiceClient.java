@@ -19,4 +19,6 @@ public interface PersonServiceClient {
     Mono<IndividualDTO> getUserIndividual(UUID userId);
 
     Mono<UserHistoryDTO> updateUser(UserDTO userDTO);
+
+    Mono<UserHistoryDTO> updateUserAddress(UUID userId, AddressDTO addressDTO);
 }

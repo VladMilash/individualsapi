@@ -3,6 +3,8 @@ package com.mvo.individualsapi.service.keycloak_person_service;
 import dto.*;
 import reactor.core.publisher.Mono;
 
+import java.util.UUID;
+
 public interface UserService {
     Mono<UserDTO> getUserInfo(String token);
 
@@ -13,4 +15,6 @@ public interface UserService {
     Mono<IndividualDTO> getUserIndividual(String token);
 
     Mono<UserHistoryDTO> updateUser(UserDTO userDTO);
+
+    Mono<UserHistoryDTO> updateUserAddress(String token, AddressDTO addressDTO);
 }

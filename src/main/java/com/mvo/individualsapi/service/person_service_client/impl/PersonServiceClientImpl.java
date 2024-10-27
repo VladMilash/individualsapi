@@ -91,4 +91,15 @@ public class PersonServiceClientImpl implements PersonServiceClient {
                 .doOnNext(response -> log.info("Response received: {}", response))
                 .doOnError(error -> log.error("Error occurred: {}", error.getMessage()));
     }
+
+    @Override
+    public Mono<UserHistoryDTO> updateUserAddress(UUID userId, AddressDTO addressDTO) {
+        return webClient.put()
+                .uri("http://localhost:8084/v1/api/users/address/{userId}", userId)
+                .bodyValue(addressDTO)
+                .retrieve()
+                .bodyToMono(UserHistoryDTO.class)
+                .doOnNext(response -> log.info("Response received: {}", response))
+                .doOnError(error -> log.error("Error occurred: {}", error.getMessage()));
+    }
 }
