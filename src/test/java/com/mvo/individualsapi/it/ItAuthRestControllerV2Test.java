@@ -32,7 +32,6 @@ public class ItAuthRestControllerV2Test {
     private PersonServiceClient personServiceClient;
 
     private RegistrationRequestDTO registrationRequestDTO;
-    private AccessTokenDTO registrationResponseDTO;
     private UserDTO mockUserDTO;
     private String accessToken;
     private final LocalDateTime now = LocalDateTime.now();
@@ -153,7 +152,7 @@ public class ItAuthRestControllerV2Test {
 
     @Test
     void testUserRegistration_Success() {
-        registrationResponseDTO = webTestClient.post()
+        AccessTokenDTO registrationResponseDTO = webTestClient.post()
                 .uri("/api/v2/auth/registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(registrationRequestDTO)
