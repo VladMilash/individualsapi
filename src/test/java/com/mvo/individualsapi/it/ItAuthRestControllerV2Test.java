@@ -32,6 +32,7 @@ public class ItAuthRestControllerV2Test {
     private PersonServiceClient personServiceClient;
 
     private RegistrationRequestDTO registrationRequestDTO;
+    private AccessTokenDTO registrationResponseDTO;
     private UserDTO mockUserDTO;
     private String accessToken;
     private final LocalDateTime now = LocalDateTime.now();
@@ -42,6 +43,21 @@ public class ItAuthRestControllerV2Test {
                 .mutate()
                 .responseTimeout(Duration.ofSeconds(20))
                 .build();
+
+        registrationRequestDTO = new RegistrationRequestDTO(
+                "John",
+                "Doe",
+                "USA",
+                "123 Test St",
+                "12345",
+                "Test City",
+                "Test State",
+                "AB123456",
+                "+1234567890",
+                "test" + System.currentTimeMillis() + "@example.com",
+                "Password123!",
+                "Password123!"
+        );
 
         UUID userId = UUID.randomUUID();
         UUID addressId = UUID.randomUUID();
@@ -137,7 +153,7 @@ public class ItAuthRestControllerV2Test {
 
     @Test
     void testUserRegistration_Success() {
-        AccessTokenDTO registrationResponseDTO = webTestClient.post()
+        registrationResponseDTO = webTestClient.post()
                 .uri("/api/v2/auth/registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(registrationRequestDTO)
@@ -293,6 +309,7 @@ public class ItAuthRestControllerV2Test {
     @Test
     void testUpdateUserIndividuals_Success() {
         testUserRegistration_Success();
+
         IndividualDTO individualDTO = new IndividualDTO(
                 UUID.randomUUID(),
                 mockUserDTO.id(),
