@@ -117,7 +117,7 @@ public class KeyCloakClientImpl implements KeyCloakClient {
     @Override
     public Mono<UserinfoResponseDTO> getUserinfo(String token) {
         return webClient.get()
-                .uri("http://localhost:8081/realms/individualsAPI/protocol/openid-connect/userinfo")
+                .uri(keycloakIssuerUri +"/protocol/openid-connect/userinfo")
                 .headers(headers -> headers.setBearerAuth(token))
                 .retrieve()
                 .bodyToMono(UserinfoResponseDTO.class)
