@@ -43,21 +43,6 @@ public class ItAuthRestControllerV2Test {
                 .responseTimeout(Duration.ofSeconds(20))
                 .build();
 
-        registrationRequestDTO = new RegistrationRequestDTO(
-                "John",
-                "Doe",
-                "USA",
-                "123 Test St",
-                "12345",
-                "Test City",
-                "Test State",
-                "AB123456",
-                "+1234567890",
-                "test" + System.currentTimeMillis() + "@example.com",
-                "Password123!",
-                "Password123!"
-        );
-
         UUID userId = UUID.randomUUID();
         UUID addressId = UUID.randomUUID();
 
@@ -308,7 +293,6 @@ public class ItAuthRestControllerV2Test {
     @Test
     void testUpdateUserIndividuals_Success() {
         testUserRegistration_Success();
-
         IndividualDTO individualDTO = new IndividualDTO(
                 UUID.randomUUID(),
                 mockUserDTO.id(),
