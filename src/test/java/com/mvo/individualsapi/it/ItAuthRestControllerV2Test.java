@@ -44,7 +44,6 @@ public class ItAuthRestControllerV2Test {
                 .responseTimeout(Duration.ofSeconds(20))
                 .build();
 
-
         registrationRequestDTO = new RegistrationRequestDTO(
                 "John",
                 "Doe",
