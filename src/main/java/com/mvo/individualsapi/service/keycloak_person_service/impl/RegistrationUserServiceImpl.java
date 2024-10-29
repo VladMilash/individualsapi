@@ -5,14 +5,13 @@ import com.mvo.individualsapi.dto.RegistrationOrLoginRequestDTO;
 import com.mvo.individualsapi.exception.ApiException;
 import com.mvo.individualsapi.service.keycloak_person_service.RegistrationUserService;
 import com.mvo.individualsapi.service.keycloak_service.RegistrationAndLoginService;
-import com.mvo.individualsapi.service.keycloak_service.UserinfoService;
 import com.mvo.individualsapi.service.person_service_client.PersonServiceClient;
 import dto.RegistrationRequestDTO;
-import dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
+
 
 
 @RequiredArgsConstructor
@@ -21,7 +20,6 @@ import reactor.core.publisher.Mono;
 public class RegistrationUserServiceImpl implements RegistrationUserService {
     private final PersonServiceClient personServiceClient;
     private final RegistrationAndLoginService registrationAndLoginService;
-    private final UserinfoService userinfoService;
 
     @Override
     public Mono<AccessTokenDTO> registrationUser(RegistrationRequestDTO request) {
