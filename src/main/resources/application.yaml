@@ -2,7 +2,7 @@ server:
   port: 8083
 
 keycloak:
-  auth-server-url: http://localhost:8081
+  auth-server-url: http://94.198.218.71:8080/
   realm: individualsAPI
   admin-username: admin
   admin-password: admin
@@ -26,7 +26,7 @@ spring:
         registration:
           keycloak:
             client-id: individualsAPI
-            client-secret: Ud2jXtJ6sDGerTTh5MQtbrunZGI7HPRy
+            client-secret: OPBa0h19GP0QLGMYwj8Cu3PHHalg5YJx
             authorization-grant-type: client_credentials
 
 logging:
