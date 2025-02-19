@@ -1,16 +1,16 @@
 server:
-  port: 8083
+  port: 8091
 
 keycloak:
-  auth-server-url: http://94.198.218.71:8080/
+  auth-server-url: http://keycloak:8080/
   realm: individualsAPI
   admin-username: admin
   admin-password: admin
   registration-uri: ${keycloak.auth-server-url}/admin/realms/individualsAPI/users
 
 person-service:
-  base-url: http://localhost:8084/v1/api/users/
-  registration-url: http://localhost:8084/v1/api/registration/
+  base-url: http://keycloak:8090/v1/api/users/
+  registration-url: http://keycloak:8090/v1/api/registration/
 
 
 spring:
