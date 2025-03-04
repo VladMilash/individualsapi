@@ -9,8 +9,8 @@ keycloak:
   registration-uri: ${keycloak.auth-server-url}/admin/realms/individualsAPI/users
 
 person-service:
-  base-url: http://keycloak:8090/v1/api/users/
-  registration-url: http://keycloak:8090/v1/api/registration/
+  base-url: http://personeservice:8090/v1/api/users/
+  registration-url: http://personeservice:8090/v1/api/registration/
 
 
 spring:
